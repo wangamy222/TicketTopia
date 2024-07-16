@@ -1,2 +1,2 @@
 # TicketTopia
-Yangju Cloud camp fimal project
+Yangju Cloud camp final project
