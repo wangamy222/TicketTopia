@@ -39,3 +39,24 @@ resource "aws_instance" "example" {
     Name = "example-instance-${count.index}"
   }
 }
+
+resource "aws_s3_bucket" "example_bucket" {
+  bucket = "0718-bichan-test"  # 고유한 버킷 이름으로 변경하세요
+  
+  tags = {
+    Name        = "My example bucket"
+    Environment = "Dev"
+  }
+}
+
+resource "aws_s3_bucket_acl" "example_bucket_acl" {
+  bucket = aws_s3_bucket.example_bucket.id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_versioning" "example_bucket_versioning" {
+  bucket = aws_s3_bucket.example_bucket.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
