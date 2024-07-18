@@ -1,0 +1,214 @@
+@import url("https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
+
+@font-face {
+  font-family: "Ralphie Tall";
+  src: url("../srcs/fonts/Ralphie\ Tall.otf") format("truetype");
+}
+
+@font-face {
+  font-family: "Ralphie";
+  src: url("../srcs/fonts/Ralphie.otf") format("truetype");
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  list-style: none;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  background: url(../img/BG.png) no-repeat center / cover;
+  color: #ffffffd7;
+  font-family: "Ralphie Tall";
+  overflow: hidden;
+  min-width: 1150px;
+}
+
+header {
+  width: 200px;
+  margin: 0 auto;
+  padding: 15px 20px 20px;
+}
+
+#logo img {
+  margin: 0 auto;
+  width: 90%;
+  height: auto;
+  display: block;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -132px;
+}
+
+#menu {
+  width: 40px;
+  padding: 10px 25px;
+}
+
+#menu svg {
+  width: 100%;
+}
+
+#menu_icon li svg {
+  transition: filter 0.3s ease; /* Smooth transition for filter */
+}
+
+#menu_icon li:hover svg {
+  filter: grayscale(100%) brightness(30%);
+}
+
+#social {
+  width: 270px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-around;
+}
+
+#social li {
+  width: 45px;
+  height: 45px;
+}
+
+#social li:first-child {
+  margin-top: -3px;
+}
+
+#social li:last-child {
+  width: 40px;
+  height: 40px;
+}
+
+#social li svg {
+  width: 100%;
+  height: 100%;
+}
+
+#social li svg path {
+  transition: fill 0.4s, stroke 0.4s;
+}
+
+#social li:first-child:hover svg path,
+#social li:nth-child(3):hover svg path {
+  fill: #555;
+  stroke: #555;
+}
+
+#social a:hover svg path {
+  stroke: #555;
+}
+
+#content {
+  position: relative;
+  margin: 0 auto;
+  padding: 30px 30px 0;
+  height: 80dvh;
+}
+
+#main {
+  position: relative;
+  height: 80dvh;
+}
+
+#concert_date {
+  font-family: "Abril Fatface", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 130px;
+  text-align: center;
+  margin-top: -10px;
+}
+
+#concert_title_box {
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  width: 850px;
+  font-family: "Ralphie";
+  margin-top: 2.5%;
+}
+
+#concert_rv_date{
+  font-size: 28px;
+  width: fit-content;
+  height: fit-content;
+  margin-top: 120px;
+  margin-left: 20px;
+}
+
+#available{
+  margin-bottom: -10px;
+}
+
+#time{
+  font-family: "Abril Fatface", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 60px;
+}
+
+#time span{
+  font-size: 25px;
+}
+
+#concert_title {
+  font-size: 70px;
+  letter-spacing: 0.3rem;
+  width: fit-content;
+  margin-right: 25px;
+}
+
+h4 {
+  width: 96dvw;
+  text-align: center;
+  font-size: 225px;
+  letter-spacing: 1.1rem;
+  position: absolute;
+  bottom: -30px;
+}
+
+#circle{
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 100%;
+}
+
+#circle img{
+  width: 100%;
+  height: 100%;
+}
+
+aside {
+  position: absolute;
+  top: 30dvh;
+  left: 50%;
+  width: 500px;
+  transform: translateX(-65%);
+}
+
+footer {
+  width: 100vw;
+  height: 5vh;
+  background-color: #333;
+  position: fixed;
+  bottom: 0;
+}
+
+footer p {
+  text-align: center;
+  margin-top: 10px;
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  letter-spacing: 1px;
+}
