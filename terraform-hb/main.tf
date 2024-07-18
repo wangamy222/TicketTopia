@@ -141,3 +141,56 @@ resource "aws_lb_target_group" "example" {
     unhealthy_threshold = 10
   }
 }
+
+# RDS Aurora MySQL Cluster
+resource "aws_rds_cluster" "aurora_mysql_cluster" {
+  cluster_identifier      = "aurora-mysql-cluster"
+  engine                  = "aurora-mysql"
+  engine_version          = "5.7.mysql_aurora.2.11.2"
+  availability_zones      = ["ap-northeast-2a", "ap-northeast-2c"]
+  database_name           = "mydb"
+  master_username         = "admin"
+  master_password         = "password"
+  backup_retention_period = 5
+  preferred_backup_window = "07:00-09:00"
+  skip_final_snapshot     = true
+
+  vpc_security_group_ids = [aws_security_group.allow_mysql.id]
+}
+
+# RDS Aurora MySQL Instance
+resource "aws_rds_cluster_instance" "aurora_mysql_instance" {
+  count               = 2
+  identifier          = "aurora-mysql-instance-${count.index}"
+  cluster_identifier  = aws_rds_cluster.aurora_mysql_cluster.id
+  instance_class      = "db.t3.medium"
+  engine              = aws_rds_cluster.aurora_mysql_cluster.engine
+  engine_version      = aws_rds_cluster.aurora_mysql_cluster.engine_version
+  publicly_accessible = false
+}
+
+# Security Group for MySQL
+resource "aws_security_group" "allow_mysql" {
+  name        = "allow_mysql"
+  description = "Allow MySQL inbound traffic"
+  vpc_id      = "vpc-0061233d1a215be71"
+
+  ingress {
+    description     = "MySQL from VPC"
+    from_port       = 3306
+    to_port         = 3306
+    protocol        = "tcp"
+    cidr_blocks     = ["172.31.0.0/16"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "allow_mysql"
+  }
+}
