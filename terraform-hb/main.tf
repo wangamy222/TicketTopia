@@ -41,7 +41,7 @@ resource "aws_instance" "example" {
 }
 
 resource "aws_s3_bucket" "example_bucket" {
-  bucket = "0718-bichan-test"  # 고유한 버킷 이름으로 변경하세요
+  bucket = "0718-bichan-test"
   
   tags = {
     Name        = "My example bucket"
@@ -49,14 +49,16 @@ resource "aws_s3_bucket" "example_bucket" {
   }
 }
 
-resource "aws_s3_bucket_acl" "example_bucket_acl" {
+resource "aws_s3_bucket_ownership_controls" "example_bucket_ownership" {
   bucket = aws_s3_bucket.example_bucket.id
-  acl    = "private"
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
 }
 
-resource "aws_s3_bucket_versioning" "example_bucket_versioning" {
+resource "aws_s3_bucket_acl" "example_bucket_acl" {
+  depends_on = [aws_s3_bucket_ownership_controls.example_bucket_ownership]
+
   bucket = aws_s3_bucket.example_bucket.id
-  versioning_configuration {
-    status = "Enabled"
-  }
+  acl    = "private"
 }
