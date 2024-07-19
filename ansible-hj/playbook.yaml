@@ -1,0 +1,21 @@
+- name: Configure web server
+  hosts: ec2
+  become: yes
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+      notify: Restart Nginx  # 핸들러 호출
+
+    - name: Copy Nginx index.html file
+      copy:
+        src: /mnt/d/TicketTopia/index.html
+        dest: /var/www/html/index.html
+      notify: Restart Nginx  # 핸들러 호출
+
+  handlers:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
