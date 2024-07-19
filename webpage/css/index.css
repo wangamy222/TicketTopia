@@ -11,12 +11,30 @@
   src: url("../srcs/fonts/Ralphie.otf") format("truetype");
 }
 
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
 * {
   margin: 0;
   padding: 0;
   text-decoration: none;
   list-style: none;
-  /* color: #333; */
+}
+
+label,
+input,
+button {
+  font-family: "Pretendard-Regular";
+}
+
+::placeholder {
+  font-size: 15px;
+  text-indent: 5px;
 }
 
 body {
@@ -29,17 +47,20 @@ body {
   min-width: 1150px;
 }
 
-header {
+#wrapper {
+  position: relative;
+}
+
+.logo_wrapper {
   width: 200px;
   margin: 0 auto;
   padding: 15px 20px 20px;
 }
 
-#logo img {
+.logo img {
   margin: 0 auto;
   width: 90%;
   height: auto;
-  display: block;
 }
 
 nav {
@@ -79,6 +100,10 @@ nav {
 
 #social li:first-child {
   margin-top: -3px;
+}
+
+#social li:first-child:hover{
+  cursor: pointer;
 }
 
 #social li:last-child {
@@ -135,7 +160,7 @@ nav {
   margin-top: 2.5%;
 }
 
-#concert_rv_date{
+#concert_rv_date {
   font-size: 28px;
   width: fit-content;
   height: fit-content;
@@ -143,18 +168,18 @@ nav {
   margin-left: 20px;
 }
 
-#available{
+#available {
   margin-bottom: -10px;
 }
 
-#time{
+#time {
   font-family: "Abril Fatface", serif;
   font-weight: 400;
   font-style: normal;
   font-size: 60px;
 }
 
-#time span{
+#time span {
   font-size: 25px;
 }
 
@@ -174,7 +199,7 @@ h4 {
   bottom: -30px;
 }
 
-#circle{
+#circle {
   position: absolute;
   top: 5%;
   left: 50%;
@@ -183,7 +208,7 @@ h4 {
   height: 100%;
 }
 
-#circle img{
+#circle img {
   width: 100%;
   height: 100%;
 }
@@ -212,4 +237,156 @@ footer p {
   font-weight: 600;
   font-style: normal;
   letter-spacing: 1px;
+}
+
+#sidemenu_wrapper, #loin_modal_wrapper {
+  width: 100dvw;
+  height: 100dvh;
+  background-color: #000000a0;
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#sidemenu {
+  width: 20dvw;
+  height: 100dvh;
+  background-color: #333;
+  color: #ffffffd7;
+  padding: 90px 50px;
+  position: fixed;
+  top: 0;
+  left: -30dvw;
+  transition: left 0.3s ease-in-out;
+  z-index: 20;
+}
+
+#sidemenu_wrapper.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#sidemenu_wrapper.active #sidemenu {
+  left: 0;
+}
+
+.close {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.close:hover {
+  cursor: pointer;
+}
+
+.close svg path {
+  transition: fill 0.3s, stroke 0.3s;
+}
+
+.close:hover svg path {
+  fill: #d36d78;
+}
+
+.close svg {
+  width: 100%;
+  height: 100%;
+}
+
+#sidemenu li {
+  margin-bottom: 40px;
+}
+
+#sidemenu li a {
+  color: #ffffffd7;
+  font-family: "Pretendard-Regular";
+  font-size: 30px;
+}
+
+#sidemenu li a:hover {
+  color: #d36d78;
+  transition: 0.3s;
+}
+
+#loin_modal_wrapper.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#loin_modal_wrapper .logo {
+  margin: 3.5dvh 0 1dvh;
+}
+
+#login_modal {
+  background-color: #333;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: 30dvw;
+  height: 65dvh;
+}
+
+#login_form {
+  width: fit-content;
+  margin: 0 auto;
+  font-size: 20px;
+  position: relative;
+}
+
+#login_form div {
+  display: flex;
+  flex-direction: column;
+}
+
+#login_form label {
+  margin-bottom: 10px;
+}
+
+#login_form input {
+  width: 300px;
+  height: 40px;
+  margin-bottom: 30px;
+  border: none;
+  text-indent: 10px;
+  color: #d36d78;
+}
+
+
+#login_form button {
+  margin: 15% auto 0;
+  font-size: 20px;
+  color: #ffffff;
+  background-color: #d36d78;
+  border: none;
+  border-radius: 10px;
+  width: 150px;
+  height: 45px;
+}
+
+#login_form button:hover {
+  cursor: pointer;
+  background-color: #fff;
+  color: #d36d78;
+}
+
+#login_form #join {
+  position: absolute;
+  bottom: 28%;
+  right: 0;
+  font-size: 15px;
+}
+
+#login_form #join a {
+  color: #fff;
+}
+
+#login_form #join a:hover {
+  color: #d36d78;
 }
