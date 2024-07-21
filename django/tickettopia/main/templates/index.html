@@ -1,0 +1,32 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Home -
+TicketTopia{% endblock %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}" />
+{% endblock %} {% block content %}
+<main id="content">
+  <div id="circle">
+    <img src="{% static 'img/Union.svg' %}" alt="Background circle" />
+  </div>
+  <div id="main">
+    <h1 id="concert_date">2024. 08. 07</h1>
+    <div id="concert_title_box">
+      <div id="concert_rv_date">
+        <p>Tickets now</p>
+        <p id="available">available at</p>
+        <p id="time">07. 27 <span>17:00</span></p>
+      </div>
+      <div id="concert_title">
+        <p>THE</p>
+        <p>ERAS</p>
+        <p>TOUR</p>
+      </div>
+    </div>
+    <h4>TAYLOR SWIFT</h4>
+  </div>
+</main>
+<aside>
+  <div id="taylor">
+    <img src="{% static 'img/taylor.png' %}" alt="taylor swift" />
+  </div>
+</aside>
+
+{% endblock %}
