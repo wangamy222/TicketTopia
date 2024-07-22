@@ -24,3 +24,25 @@ h2{
   display: flex;
   justify-content: space-between;
 }
+/* 
+#join_form input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0 !important;
+} */
+
+#join_form input[type="date"] {
+  position: relative !important;
+  padding-right: 25px !important;
+  box-sizing: border-box;
+  background-color: gold;
+}
+
+/* #join_form input[type="date"]::after {
+  background-color: green;
+  width: fit-content;
+  content: "\1F4C5" !important;
+  position: absolute !important;
+  top: 50% !important;
+  right: 5px !important;
+  transform: translateY(-50%) !important;
+  pointer-events: none !important;
+} */

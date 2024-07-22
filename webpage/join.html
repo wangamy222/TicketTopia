@@ -6,6 +6,26 @@
     <link rel="stylesheet" href="css/general.css" />
     <link rel="stylesheet" href="css/large_form.css" />
     <link rel="stylesheet" href="css/join.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+  .date-input-wrapper {
+    position: relative;
+  }
+
+  .date-input-wrapper input {
+    padding-right: 30px;
+    box-sizing: border-box;
+  }
+
+  .date-input-wrapper::after {
+    content: "\1F4C5";
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+</style>
     <title>TicketTopia</title>
   </head>
   <body>
@@ -218,6 +238,17 @@
                   placeholder="'-'를 넣어 입력해 주세요"
                 />
               </div>
+              <div class="date-input-wrapper">
+                <label for="userBirthdate">전화번호</label>
+                <input
+                  type="text"
+                  id="userBirthdate"
+                  name="userBirthdate"
+                  placeholder="생년월일 선택해 주세요"
+                  required
+                  readonly
+                />
+              </div>
               <div id="button_wrapper">
                 <button id="back"><a href="index.html">돌아가기</a></button>
                 <button type="submit" id="join_in">회원가입</button>
@@ -306,5 +337,16 @@
       </div>
     </div>
     <script src="js/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        flatpickr("#userBirthdate", {
+          dateFormat: "Y-m-d",
+          allowInput: true,
+          clickOpens: true,
+          disableMobile: "true",
+        });
+      });
+    </script>
   </body>
 </html>
