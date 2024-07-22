@@ -1,0 +1,45 @@
+---
+- name: Install system dependencies
+  apt:
+    name:
+      - python3-pip
+      - python3-venv
+      - nginx
+    state: present
+
+- name: Create virtual environment
+  command: python3 -m venv {{ venv_path }}
+  args:
+    creates: "{{ venv_path }}"
+
+- name: Install Django and other dependencies
+  pip:
+    name:
+      - django==3.2
+      - gunicorn
+      - mysqlclient
+    virtualenv: "{{ venv_path }}"
+
+- name: Create Django project
+  command: "{{ venv_path }}/bin/django-admin startproject {{ django_project_name }}"
+  args:
+    chdir: /home/ubuntu
+    creates: "{{ django_app_path }}"
+
+- name: Update Django settings
+  template:
+    src: settings.py.j2
+    dest: "{{ django_app_path }}/{{ django_project_name }}/settings.py"
+  
+
+- name: Run Django migrations
+  command: "{{ venv_path }}/bin/python manage.py migrate"
+  args:
+    chdir: "{{ django_app_path }}"
+
+- name: Start Gunicorn
+  command: "{{ venv_path }}/bin/gunicorn --bind 0.0.0.0:8000 {{ django_project_name }}.wsgi:application"
+  args:
+    chdir: "{{ django_app_path }}"
+  async: 1000000
+  poll: 0

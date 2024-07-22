@@ -1,0 +1,64 @@
+---
+- name: Deploy Django and connect to Aurora
+  hosts: all
+  become: yes
+  vars:
+    django_project_name: your_project_name
+    django_app_path: "/home/ubuntu/{{ django_project_name }}"
+    venv_path: "/home/ubuntu/venv"
+    terraform_output: "{{ lookup('file', 'terraform_output.json') | from_json }}"
+    db_name: "{{ terraform_output.db_name.value }}"
+    db_user: "{{ terraform_output.db_user.value }}"
+    db_password: "{{ terraform_output.db_password.value }}"
+    db_host: "{{ terraform_output.aurora_cluster_endpoint.value }}"
+
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install required system packages
+      apt:
+        name:
+          - python3-pip
+          - python3-dev
+          - default-libmysqlclient-dev
+          - build-essential
+          - pkg-config
+          - nginx
+        state: present
+
+    - name: Debug Terraform output
+      debug:
+        var: terraform_output
+
+    - name: Debug database variables
+      debug:
+        msg: 
+          - "DB Name: {{ db_name }}"
+          - "DB User: {{ db_user }}"
+          - "DB Host: {{ db_host }}"
+
+  roles:
+    - aurora
+    - django
+
+  tasks:
+    - name: Configure Nginx
+      template:
+        src: /home/terraform_ansible/2week/ansible/templates/nginx_site.conf.j2
+        dest: /etc/nginx/sites-available/django
+      notify: Restart Nginx
+
+    - name: Enable Nginx site
+      file:
+        src: /etc/nginx/sites-available/django
+        dest: /etc/nginx/sites-enabled/django
+        state: link
+      notify: Restart Nginx
+
+  handlers:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted

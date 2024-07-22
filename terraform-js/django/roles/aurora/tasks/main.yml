@@ -1,0 +1,22 @@
+- name: Update apt cache
+  apt:
+    update_cache: yes
+  become: yes
+
+- name: Install required system packages
+  apt:
+    name:
+      - mysql-client
+      - python3-pip
+      - python3-dev
+      - default-libmysqlclient-dev
+      - build-essential
+      - pkg-config
+    state: present
+  become: yes
+
+- name: Install Python MySQL package
+  pip:
+    name: mysqlclient
+    state: present
+  become: yes
