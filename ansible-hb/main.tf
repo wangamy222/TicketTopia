@@ -7,11 +7,24 @@ data "aws_vpc" "default" {
   default = true
 }
 
-# 모든 가용영역의 서브넷 데이터 소스
+# 지원되는 가용영역
+data "aws_availability_zones" "available" {
+  state = "available"
+  filter {
+    name   = "opt-in-status"
+    values = ["opt-in-not-required"]
+  }
+}
+
+# 지원되는 가용영역의 서브넷 데이터 소스
 data "aws_subnets" "default" {
   filter {
     name   = "vpc-id"
     values = [data.aws_vpc.default.id]
+  }
+  filter {
+    name   = "availability-zone"
+    values = [data.aws_availability_zones.available.names[0], data.aws_availability_zones.available.names[2]]
   }
 }
 
@@ -71,7 +84,7 @@ resource "aws_launch_template" "app" {
   user_data = base64encode(<<-EOF
               #!/bin/bash
               apt update -y
-              apt install nginx curl -y
+              apt install nginx curl stress-ng -y
               # IMDSv2를 사용하여 인스턴스 ID 가져오기
               TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
               INSTANCE_ID=$(curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/instance-id)
@@ -81,6 +94,8 @@ resource "aws_launch_template" "app" {
               echo "<h1>Instance ID: $INSTANCE_ID</h1><h2>Hostname: $HOSTNAME</h2>" > /var/www/html/index.html
               # nginx 재시작
               systemctl restart nginx
+              # CPU 사용률을 높이는 명령 추가
+              stress-ng --cpu 1 --timeout 300 &
               EOF
   )
 }
@@ -114,12 +129,16 @@ resource "aws_lb_target_group" "app" {
   health_check {
     path                = "/"
     healthy_threshold   = 2
-    unhealthy_threshold = 10
+    unhealthy_threshold = 2
+    timeout             = 3
+    interval            = 10
   }
+
 }
 
 # Auto Scaling Group
 resource "aws_autoscaling_group" "app" {
+
   desired_capacity     = 2
   max_size             = 3
   min_size             = 1
@@ -131,6 +150,9 @@ resource "aws_autoscaling_group" "app" {
     version = "$Latest"
   }
 
+  health_check_type         = "ELB"
+  health_check_grace_period = 300
+
   tag {
     key                 = "Name"
     value               = "example-instance"
@@ -138,12 +160,34 @@ resource "aws_autoscaling_group" "app" {
   }
 }
 
+
+
 # Auto Scaling Policy
 resource "aws_autoscaling_policy" "scale_up" {
   name                   = "scale-up-policy"
   scaling_adjustment     = 1
   adjustment_type        = "ChangeInCapacity"
-  cooldown               = 300
+  cooldown               = 60
   autoscaling_group_name = aws_autoscaling_group.app.name
 }
 
+resource "aws_autoscaling_policy" "scale_down" {
+  name                   = "scale-down-policy"
+  scaling_adjustment     = -1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 60
+  autoscaling_group_name = aws_autoscaling_group.app.name
+}
+
+resource "aws_autoscaling_policy" "target_tracking_policy" {
+  name                   = "target-tracking-policy"
+  policy_type            = "TargetTrackingScaling"
+  autoscaling_group_name = aws_autoscaling_group.app.name
+
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+    target_value = 5.0
+  }
+}
