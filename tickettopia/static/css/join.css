@@ -8,7 +8,7 @@
   transform: translateX(-50%);
 }
 
-h2{
+h2 {
   font-family: "Pretendard-Regular";
   letter-spacing: 0.4rem;
   font-size: 40px;
@@ -17,10 +17,3 @@ h2{
   color: #fff;
 }
 
-#button_wrapper {
-  margin: 10px auto 0;
-  width: 350px;
-  height: 45px;
-  display: flex;
-  justify-content: space-between;
-}

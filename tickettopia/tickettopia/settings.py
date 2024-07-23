@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+ 
 from pathlib import Path
 import os
 
@@ -27,6 +27,11 @@ SECRET_KEY = ''
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_SECURE = True  # HTTPS를 사용하는 경우에만 True로 설정
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
 
 
 # Application definition
@@ -77,8 +82,16 @@ WSGI_APPLICATION = 'tickettopia.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': 'database-2.clmuio6ys7z5.ap-northeast-2.rds.amazonaws.com',
+        'PORT': 3306,
+        'NAME': 'TicketTopia',
+        'USER': 'admin',
+        'PASSWORD': '',
+        'CONN_MAX_AGE': 600,
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
 
@@ -120,7 +133,19 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+""" AUTHENTICATION_BACKENDS = [
+    'main.auth_backends.CustomAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+] """
+
+AUTH_USER_MODEL = 'main.User'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
