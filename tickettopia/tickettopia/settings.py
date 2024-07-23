@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%ui&z%k1e3ong8sn3l)m10h6y7z%l+$wg1^w6_f_)3=-ra^a0a'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -87,7 +87,7 @@ DATABASES = {
         'PORT': 3306,
         'NAME': 'TicketTopia',
         'USER': 'admin',
-        'PASSWORD': 'ttp240727',
+        'PASSWORD': '',
         'CONN_MAX_AGE': 600,
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -139,10 +139,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-""" AUTHENTICATION_BACKENDS = [
-    'main.auth_backends.CustomAuthBackend',
-    'django.contrib.auth.backends.ModelBackend',
-] """
+
 
 AUTH_USER_MODEL = 'main.User'
 

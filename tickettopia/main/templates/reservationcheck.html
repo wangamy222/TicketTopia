@@ -5,6 +5,7 @@ TicketTopia{% endblock %} {% block extra_css %}
 {% endblock %} {% block content %}
 <main id="main_wrapper">
   <h2>예매 확정</h2>
+  {% if payment %}
   <div id="image_wrapper">
     <img
       src="{% static 'img/taylor_poster.jpg' %}"
@@ -12,10 +13,11 @@ TicketTopia{% endblock %} {% block extra_css %}
     />
   </div>
   <h3>TAYLOR SWIFT: THE ERAS TOUR</h3>
+
   <div id="ticket_info">
     <div id="ticket_number">
       <p>티켓번호</p>
-      <p>TS-07272024-00001</p>
+      <p>{{ payment.tid }}</p>
     </div>
     <div id="ticket_date">
       <p>날짜</p>
@@ -23,12 +25,24 @@ TicketTopia{% endblock %} {% block extra_css %}
     </div>
     <div id="ticket_name">
       <p>이름</p>
-      <p>이현지</p>
+      <p>{{ payment.uname }}</p>
     </div>
     <div id="ticket_seat">
       <p>좌석</p>
-      <p>A-01</p>
+      <p>{{ payment.pid }}</p>
     </div>
   </div>
+  {% else %}
+  <div class="no_log">예매가 확정되지 않았습니다</div>
+  {% endif %}
 </main>
+
+{% endblock %} {% block extra_js %}
+<style>
+  .no_log {
+    font-size: 30px;
+    text-align: center;
+    margin-top: 28dvh;
+  }
+</style>
 {% endblock %}

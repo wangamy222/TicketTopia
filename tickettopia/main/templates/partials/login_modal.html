@@ -1,6 +1,11 @@
 {% load static %}
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
 
-<div id="login_modal_wrapper">
+<div id="login_modal_wrapper" class="{% if user.is_authenticated %}hidden{% endif %}">
   <div id="login_modal">
     <div class="close">
       <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -46,3 +51,33 @@
   </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#loginForm').on('submit', function(e) {
+      e.preventDefault();
+
+      let formData = {
+        uid: $('#userLoginId').val(),
+        password: $('#userLoginPassword').val(),
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+      };
+
+      $.ajax({
+        type: 'POST',
+        url: "{% url 'login' %}",
+        data: formData,
+        success: function(response) {
+          if (response.success) {
+            window.location.href = response.redirect_url;
+          } else {
+            alert(response.message);
+          }
+        },
+        error: function(response) {
+          alert('An error occurred. Please try again.');
+        }
+      });
+    });
+  });
+</script>

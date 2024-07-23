@@ -10,13 +10,23 @@ document.addEventListener("DOMContentLoaded", function () {
   const priceInput = document.getElementById("price");
   const payInButton = document.getElementById("pay_in");
   const finalPayButton = document.getElementById("pay");
+  const mainWrapper = document.getElementById("main_wrapper");
+
+  let loggedInUserName = "";
+  if (
+    mainWrapper &&
+    mainWrapper.dataset &&
+    mainWrapper.dataset.loggedInUserName
+  ) {
+    loggedInUserName = mainWrapper.dataset.loggedInUserName;
+  }
 
   function checkInputs() {
     if (userNameInput && priceInput && payInButton) {
-      if (
-        userNameInput.value.trim() !== "" &&
-        priceInput.value.trim() === "백만원"
-      ) {
+      const enteredName = userNameInput.value.trim();
+      const enteredPrice = priceInput.value.trim();
+
+      if (enteredName === loggedInUserName && enteredPrice === "백만원") {
         payInButton.disabled = false;
       } else {
         payInButton.disabled = true;
@@ -27,6 +37,27 @@ document.addEventListener("DOMContentLoaded", function () {
   if (userNameInput && priceInput) {
     userNameInput.addEventListener("input", checkInputs);
     priceInput.addEventListener("input", checkInputs);
+  }
+
+  if (payInButton) {
+    payInButton.addEventListener("click", function (event) {
+      event.preventDefault();
+
+      const enteredName = userNameInput.value.trim();
+      const enteredPrice = priceInput.value.trim();
+
+      if (enteredName !== loggedInUserName) {
+        alert("이름이 동일하지 않습니다.");
+        return;
+      }
+
+      if (enteredPrice !== "백만원") {
+        alert("가격이 올바르지 않습니다.");
+        return;
+      }
+
+      alert("예매가 진행됩니다.");
+    });
   }
 
   if (closeButtons.length > 0) {

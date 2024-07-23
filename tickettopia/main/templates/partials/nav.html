@@ -1,4 +1,31 @@
-{% load static %}
+{% load static %} {% load custom_filters %}
+<style>
+  @font-face {
+    font-family: "Pretendard-Regular";
+    src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+      format("woff");
+    font-weight: 400;
+    font-style: normal;
+  }
+  #login_status {
+    display: block;
+    width: 70px;
+    font-family: "Pretendard-Regular";
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+    margin-left: -13px;
+  }
+  #login_status a{
+    display: block;
+    width: 70px;
+    font-family: "Pretendard-Regular";
+    font-size: 15px;
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+  }
+</style>
 <ul id="menu_icon">
   <li id="menu">
     <a href="#"
@@ -47,7 +74,15 @@
         />
       </svg>
     </a>
-    <span id="login_status" style="font-size: 15px">로그인</span>
+    <!-- <span id="login_status" style="font-size: 15px">로그인</span> -->
+    <span id="login_status" style="font-size: 15px">
+      {% if user.is_authenticated %}
+      <a href="{% url 'logout' %}" class="logout"
+        >{{ user.uid|split_at:"@" }} <br />
+        로그아웃</a
+      >
+      {% else %} 로그인 {% endif %}
+    </span>
   </li>
   <li>
     <a href="https://www.youtube.com/watch?v=KudedLV0tP0" target="_blank"
