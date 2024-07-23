@@ -17,8 +17,12 @@
     </div>
     <ul>
       <li><a href="{% url 'concertinfo' %}">공연정보</a></li>
-      <li><a href="{% url 'reservation' %}">예매하기</a></li>
-      <li><a href="{% url 'reservationlog' %}">예매내역</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'reservation' %}">예매하기</a></li>
+        <li><a href="{% url 'reservationlog' %}">예매내역</a></li>
+      {% else %}
+        <!-- Add login modal trigger here -->
+      {% endif %}
       <li><a href="{% url 'notice' %}">공지사항</a></li>
     </ul>
   </div>

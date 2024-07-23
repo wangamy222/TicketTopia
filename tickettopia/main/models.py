@@ -56,11 +56,13 @@ class Payment(models.Model):
     pid = models.CharField(unique=True, max_length=50)
     tid = models.CharField(max_length=50)
     uid = models.CharField(max_length=50)
+    uname = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
 
     class Meta:
         managed = False
         db_table = 'Payment'
+
 
 
 class Reservation(models.Model):
@@ -87,19 +89,6 @@ class Ticket(models.Model):
         managed = False
         db_table = 'Ticket'
 
-
-""" class User(models.Model):
-    seq = models.AutoField(primary_key=True)
-    uid = models.CharField(unique=True, max_length=50)
-    password = models.CharField(max_length=255)
-    name = models.CharField(max_length=100)
-    birthday = models.DateField()
-    phonenumber = models.CharField(max_length=15)
-    state = models.CharField(max_length=50, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'User' """
 
 
 class AuthGroup(models.Model):
