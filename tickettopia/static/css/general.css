@@ -32,6 +32,7 @@ button {
   font-family: "Pretendard-Regular";
 }
 
+
 ::placeholder {
   font-size: 15px;
   text-indent: 10px;
@@ -91,6 +92,11 @@ nav {
   padding: 15px;
   display: flex;
   justify-content: space-around;
+}
+
+.social_title{
+  font-size: 10px;
+  background-color: pink;
 }
 
 #social li {
@@ -299,3 +305,4 @@ footer p {
 #login_form #join a:hover {
   color: #d36d78;
 }
+
