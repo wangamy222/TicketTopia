@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = 'django-insecure-%ui&z%k1e3ong8sn3l)m10h6y7z%l+$wg1^w6_f_)3=-ra^a0a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -87,7 +87,7 @@ DATABASES = {
         'PORT': 3306,
         'NAME': 'TicketTopia',
         'USER': 'admin',
-        'PASSWORD': '',
+        'PASSWORD': 'ttp240727',
         'CONN_MAX_AGE': 600,
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
