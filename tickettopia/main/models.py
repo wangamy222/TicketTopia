@@ -56,7 +56,7 @@ class Payment(models.Model):
     pid = models.CharField(unique=True, max_length=50)
     tid = models.CharField(max_length=50)
     uid = models.CharField(max_length=50)
-    uname = models.CharField(max_length=50)
+    uname = models.CharField(max_length=50, default='') 
     state = models.CharField(max_length=50)
 
     class Meta:
