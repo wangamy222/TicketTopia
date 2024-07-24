@@ -1,0 +1,53 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Reservation -
+TicketTopia{% endblock %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/large_form.css' %}" />
+<link rel="stylesheet" href="{% static 'css/reservation.css' %}" />
+<style>
+  .small_title {
+    display: inline-block;
+    font-weight: bold;
+    color: #d36d78;
+    font-size: 17px;
+    margin-left: 5px;
+  }
+</style>
+{% endblock %} {% block content %}
+<main id="main_wrapper" {% if user.is_authenticated %}data-logged-in-user-name="{{ user.name }}"{% endif %}>
+  <h2>TAYLOR SWIFT: THE ERAS TOUR</h2>
+  <h3>2024. 08. 07</h3>
+  <div id="join_form">
+    <form action="{% url 'reservation' %}" method="post">
+      {% csrf_token %}
+      <div>
+        <label for="userName"
+          >이름<span class="small_title"
+            >(가입한 이름과 동일해야 합니다)</span
+          ></label
+        >
+        <input
+          type="text"
+          id="userName"
+          name="userName"
+          required
+          placeholder="이름을 입력해 주세요"
+        />
+      </div>
+      <div>
+        <label for="price">가격</label>
+        <input
+          type="text"
+          id="price"
+          name="price"
+          required
+          placeholder="'백만원'을 입력해 주세요"
+        />
+      </div>
+      <div id="button_wrapper">
+        <button id="back"><a href="{% url 'index' %}">취소</a></button>
+        <button type="submit" id="pay_in" disabled>예매</button>
+      </div>
+    </form>
+  </div>
+</main>
+
+{% include 'partials/pay_modal.html' %} {% endblock %}

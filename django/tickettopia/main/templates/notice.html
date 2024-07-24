@@ -1,0 +1,94 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Notice -
+TicketTopia{% endblock %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/notice.css' %}"/>
+{% endblock %} {% block content %}
+<main id="main_wrapper">
+  <h2>공지사항</h2>
+  <div id="info_text">
+    <ol>
+      <li id="ticket-info" class="list_title">
+        <span class="info-title"> 티켓 예매 안내</span>
+        <ol>
+          <li>
+            <div class="info-content">
+              <p>안녕하세요. 티켓토피아입니다.</p>
+              <p>
+                티켓토피아 단독판매 테일러 스위프트: 디 에라스 투어 첫
+                단독 내한 공연 티켓오픈 안내입니다.
+              </p>
+              <br />
+              <p>
+                <b>공연정보</b> <br />
+                - <span class="info_small">공연 일시: </span>2024년 8월
+                07일(수) 오후 7시
+                <br />
+                - <span class="info_small">공연 장소: </span>서울
+                잠실종합운동장 올림픽주경기장
+                <br />
+                - <span class="info_small">일반 예매:</span> 2024년 7월
+                29일(월) 오후 5시<span class="info_tiny">
+                  (전석 선착순 좌석 배정)</span
+                >
+                <br />
+                - <span class="info_small">티켓 수량: </span>1인 1매
+                <br />
+                - <span class="info_small">티켓 가격: </span>전석 동일
+                1,000,000원(백만원)
+                <br />
+                - <span class="info_small">관람 등급: </span>만 12세
+                이상 관람가
+                <br />
+                <br />
+                <span class="info_tiny"
+                  >* 예매자 본인만 티켓 수령 가능</span
+                >
+                <br />
+                <span class="info_tiny">* 취소/환불/양도 불가</span>
+                <br />
+                <span class="info_tiny"
+                  >* 온라인 구매 한정, 현장 구매 불가</span
+                >
+              </p>
+            </div>
+          </li>
+        </ol>
+      </li>
+      <li id="fraud-info" class="list_title">
+        <span class="info-title">부정 거래 안내</span>
+        <div class="info-content">
+          <!-- Add content for 부정 거래 안내 here -->
+          <p>
+            <span class="info_small">부정이용에 대한 규제</span> <br />
+            부정이용은 공정한 예매 및 온라인 상거래를 저해하는
+            범죄행위로 고객과 서비스에 심각한 피해를 야기하고 있습니다.
+            <br />
+            성숙하고 깨끗한 공연문화를 자리잡기 위해 티켓토피아는 부정이용을 근절하고자 부정이용 방지 시스템과
+            실시간 모니터링을 운영하고 있습니다. <br />
+            부적절한 행위가 적발될 경우, 서비스의 이용제한은 물론
+            예매티켓 취소 등의 조치를 취하고 있으며, 사안에 따라서는
+            신고 등 법적 조치가 발생할 수 있습니다.
+            <br />
+            <br />
+            <span class="info_small">부정이용 방지 시스템</span> <br />
+            부정이용 방지 시스템을 통해 부정이용자를 감시하며, 부정이용
+            패턴을 분석해 지속적으로 업데이트 합니다.
+            <br />
+            <span class="info_tiny"
+              >- 서비스 이용 제한 및 영구정지</span
+            >
+            <br />
+            <span class="info_tiny">- 예매 티켓 취소</span> <br />
+            <span class="info_tiny">- 제재 대상자 공개</span> <br />
+            <span class="info_tiny">- 신고 등 법적 조치</span><br />
+            <br />
+            <span class="info_small">실시간 모니터링</span> <br />
+            내부 모니터링은 물론 기획사와 고객으로부터 직접 제보를 받아
+            부정거래를 적발해 제재합니다.
+          </p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</main>
+
+{% endblock %}

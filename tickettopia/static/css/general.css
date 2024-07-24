@@ -1,0 +1,307 @@
+@import url("https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
+
+@font-face {
+  font-family: "Ralphie Tall";
+  src: url("../srcs/fonts/Ralphie\ Tall.otf") format("truetype");
+}
+
+@font-face {
+  font-family: "Ralphie";
+  src: url("../srcs/fonts/Ralphie.otf") format("truetype");
+}
+
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  list-style: none;
+}
+
+label,
+input,
+button {
+  font-family: "Pretendard-Regular";
+}
+
+
+::placeholder {
+  font-size: 15px;
+  text-indent: 10px;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  background: url(../img/BG.png) no-repeat center / cover;
+  color: #ffffffd7;
+  font-family: "Ralphie Tall";
+  overflow: hidden;
+  min-width: 1150px;
+}
+
+#wrapper {
+  position: relative;
+}
+
+.logo_wrapper {
+  width: 200px;
+  margin: 0 auto;
+  padding: 15px 20px 20px;
+}
+
+.logo img {
+  margin: 0 auto;
+  width: 90%;
+  height: auto;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -132px;
+}
+
+#menu {
+  width: 40px;
+  padding: 10px 25px;
+}
+
+#menu svg {
+  width: 100%;
+}
+
+#menu_icon li svg {
+  transition: filter 0.3s ease;
+}
+
+#menu_icon li:hover svg {
+  filter: grayscale(100%) brightness(30%);
+}
+
+#social {
+  width: 270px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.social_title{
+  font-size: 10px;
+}
+
+#social li {
+  width: 45px;
+  height: 45px;
+}
+
+#social li:first-child {
+  margin-top: -3px;
+}
+
+#social li:first-child:hover {
+  cursor: pointer;
+}
+
+#social li:last-child {
+  width: 40px;
+  height: 40px;
+}
+
+#social li svg {
+  width: 100%;
+  height: 100%;
+}
+
+#social li svg path {
+  transition: fill 0.4s, stroke 0.4s;
+}
+
+#social li:first-child:hover svg path,
+#social li:nth-child(3):hover svg path {
+  fill: #555;
+  stroke: #555;
+}
+
+#social a:hover svg path {
+  stroke: #555;
+}
+
+footer {
+  width: 100vw;
+  height: 5vh;
+  background-color: #333;
+  position: fixed;
+  bottom: 0;
+}
+
+footer p {
+  text-align: center;
+  margin-top: 10px;
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  letter-spacing: 1px;
+}
+
+#sidemenu_wrapper,
+#login_modal_wrapper {
+  width: 100dvw;
+  height: 100dvh;
+  background-color: #000000a0;
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#sidemenu {
+  width: 20dvw;
+  height: 100dvh;
+  background-color: #333;
+  color: #ffffffd7;
+  padding: 90px 50px;
+  position: fixed;
+  top: 0;
+  left: -30dvw;
+  transition: left 0.3s ease-in-out;
+  z-index: 20;
+}
+
+#sidemenu_wrapper.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#sidemenu_wrapper.active #sidemenu {
+  left: 0;
+}
+
+.close {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.close:hover {
+  cursor: pointer;
+}
+
+.close svg path {
+  transition: fill 0.3s, stroke 0.3s;
+}
+
+.close:hover svg path {
+  fill: #d36d78;
+}
+
+.close svg {
+  width: 100%;
+  height: 100%;
+}
+
+#sidemenu li {
+  margin-bottom: 40px;
+}
+
+#sidemenu li a {
+  color: #ffffffd7;
+  font-family: "Pretendard-Regular";
+  font-size: 30px;
+}
+
+#sidemenu li a:hover {
+  color: #d36d78;
+  transition: 0.3s;
+}
+
+#login_modal_wrapper.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#login_modal_wrapper .logo {
+  margin: 3.5dvh 0 1dvh;
+}
+
+#login_modal {
+  background-color: #333;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: 30dvw;
+  height: 65dvh;
+}
+
+#login_form {
+  width: fit-content;
+  margin: 0 auto;
+  font-size: 20px;
+  position: relative;
+}
+
+#login_form div {
+  display: flex;
+  flex-direction: column;
+}
+
+#login_form label {
+  margin-bottom: 10px;
+}
+
+#login_form input {
+  width: 300px;
+  height: 40px;
+  margin-bottom: 30px;
+  border: none;
+  text-indent: 10px;
+  color: #d36d78;
+}
+
+#login_form button {
+  margin: 15% auto 0;
+  font-size: 20px;
+  color: #ffffff;
+  background-color: #d36d78;
+  border: none;
+  border-radius: 10px;
+  width: 150px;
+  height: 45px;
+}
+
+#login_form button:hover {
+  cursor: pointer;
+  background-color: #fff;
+  color: #d36d78;
+}
+
+#login_form #join {
+  position: absolute;
+  bottom: 28%;
+  right: 0;
+  font-size: 15px;
+}
+
+#login_form #join a {
+  color: #fff;
+}
+
+#login_form #join a:hover {
+  color: #d36d78;
+}
+
