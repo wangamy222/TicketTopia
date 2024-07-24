@@ -1,0 +1,120 @@
+- hosts: django
+  become: yes
+  remote_user: ubuntu
+
+  vars:
+    s3_bucket_name: "new-unique-django-static-bucket"
+    aws_access_key: "your-access-key-id"
+    aws_secret_key: "your-secret-access-key"
+    django_project_name: "tickettopia"  # Django 프로젝트의 이름
+    django_project_dir: "/home/ubuntu/tickettopia"  # EC2 인스턴스 내의 배포 경로
+    aurora_cluster_endpoint: "aurora-cluster-endpoint"  # Aurora 클러스터 엔드포인트
+
+  tasks:
+    - name: Install Docker, Docker Compose, and dependencies
+      apt:
+        update_cache: yes
+        name:
+          - docker.io
+          - docker-compose
+          - python3-pip
+          - nginx
+
+    - name: Add user to docker group
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
+
+    - name: Create project directory
+      file:
+        path: "{{ django_project_dir }}"
+        state: directory
+
+    - name: Create Docker Compose file
+      copy:
+        content: |
+          version: '3'
+          services:
+            web:
+              image: wangamy/tickettopia.1
+              ports:
+                - "8000:8000"
+              environment:
+                DJANGO_SETTINGS_MODULE: "{{ django_project_name }}.settings"
+                AWS_ACCESS_KEY_ID: "{{ aws_access_key }}"
+                AWS_SECRET_ACCESS_KEY: "{{ aws_secret_key }}"
+                AWS_STORAGE_BUCKET_NAME: "{{ s3_bucket_name }}"
+                DATABASE_NAME: "tickettopia"
+                DATABASE_USER: "admin"
+                DATABASE_PASSWORD: "1q2w3e4r"
+                DATABASE_HOST: "{{ aurora_cluster_endpoint }}"
+            db:
+              image: mysql:5.7
+              environment:
+                MYSQL_ROOT_PASSWORD: "rootpassword"
+                MYSQL_DATABASE: "tickettopia"
+                MYSQL_USER: "admin"
+                MYSQL_PASSWORD: "1q2w3e4r"
+              volumes:
+                - db_data:/var/lib/mysql
+          volumes:
+            db_data:
+        dest: "{{ django_project_dir }}/docker-compose.yml"
+
+    - name: Pull Docker images
+      command: docker-compose pull
+      args:
+        chdir: "{{ django_project_dir }}"
+
+    - name: Start Docker Compose
+      command: docker-compose up -d
+      args:
+        chdir: "{{ django_project_dir }}"
+
+    - name: Collect static files
+      command: docker-compose run web python manage.py collectstatic --noinput
+      args:
+        chdir: "{{ django_project_dir }}"
+
+    - name: Apply database migrations
+      command: docker-compose run web python manage.py migrate
+      args:
+        chdir: "{{ django_project_dir }}"
+
+    - name: Configure Nginx
+      copy:
+        content: |
+          server {
+              listen 80;
+              server_name _;
+
+              location /static/ {
+                  alias /home/ubuntu/{{ django_project_name }}/static/;
+              }
+
+              location / {
+                  proxy_pass http://127.0.0.1:8000;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+              }
+          }
+        dest: /etc/nginx/sites-available/{{ django_project_name }}
+
+    - name: Enable Nginx site
+      file:
+        src: /etc/nginx/sites-available/{{ django_project_name }}
+        dest: /etc/nginx/sites-enabled/{{ django_project_name }}
+        state: link
+
+    - name: Remove default Nginx site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Restart Nginx
+      systemd:
+        name: nginx
+        state: restarted
