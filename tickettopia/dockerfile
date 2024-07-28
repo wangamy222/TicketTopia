@@ -32,4 +32,4 @@ RUN pip install --upgrade pip && \
 COPY . /code/
 
 # Run gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "tickettopia.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "tickettopia.wsgi:application"]

@@ -1,6 +1,7 @@
 version: "3"
 services:
   nginx:
+    container_name: mysitenginx
     image: nginx:latest
     ports:
       - "80:80"
@@ -11,8 +12,6 @@ services:
       - static_volume:/static
     restart: always
     
-
-
   was:
     build: .
     hostname: was

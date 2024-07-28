@@ -30,6 +30,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(uid, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
+    last_login = models.DateTimeField(null=True, blank=True)
     seq = models.AutoField(primary_key=True)
     uid = models.CharField(unique=True, max_length=50)
     password = models.CharField(max_length=255)

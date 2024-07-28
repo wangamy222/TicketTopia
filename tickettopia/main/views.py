@@ -11,6 +11,8 @@ from .models import User, Payment
 import logging
 logger = logging.getLogger(__name__)
 
+def check_auth(request):
+    return JsonResponse({'is_authenticated': request.user.is_authenticated})
 
 def reservationlog(request):
     if request.user.is_authenticated:
@@ -77,35 +79,6 @@ def create_payment(request):
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
         
-""" @csrf_exempt
-@require_POST
-def create_payment(request):
-    try:
-        with transaction.atomic():
-            last_payment = Payment.objects.last()
-            seq = last_payment.seq + 1 if last_payment else 1
-
-            if seq > 30000:
-                # Raise an exception to stop the reservation process
-                raise Exception('Reservation limit exceeded. Reservation stopped.')
-
-            payment = Payment.objects.create(
-                pid=f"ET-{seq}",
-                tid=f"TS-07272024-{seq}",
-                uid=request.user.uid if request.user.is_authenticated else 'anonymous',
-                uname=request.user.name if request.user.is_authenticated else 'Anonymous',
-                state='1'
-            )
-
-            return JsonResponse({
-                'success': True,
-                'pid': payment.pid,
-                'tid': payment.tid
-            })
-
-    except Exception as e:
-        return JsonResponse({'success': False, 'error': str(e)}) """
-
 
 @login_required
 def reservation_view(request):
@@ -114,7 +87,6 @@ def reservation_view(request):
     }
     print(f"Passing user name to template: {request.user.name}")  
     return render(request, 'reservation.html', context)
-
 
 def user_login(request):
     if request.method == 'POST':
@@ -131,9 +103,8 @@ def user_login(request):
             else:
                 return JsonResponse({'success': False, 'message': 'Invalid credentials'})
 
-    return render(request, 'login.html', {'user': request.user})
-
-
+    return render(request, 'index.html', {'user': request.user})
+  
 
 def join(request):
     if request.method == 'POST':
