@@ -1,7 +1,13 @@
-{% extends 'base.html' %} {% load static %} {% block title %}TicketTopia{%
-endblock %} {% block extra_css %}
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/concertinfo.css' %}" />
-{% endblock %} {% block content %}
+{% endblock %} 
+
+{% block content %}
+
 <main id="main_wrapper">
   <h2>공연 정보</h2>
   <div id="info_wrapper">
@@ -57,5 +63,5 @@ endblock %} {% block extra_css %}
       </p>
     </div>
   </div>
-</main>
+</main> 
 {% endblock %}

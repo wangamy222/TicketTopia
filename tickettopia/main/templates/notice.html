@@ -1,7 +1,11 @@
-{% extends 'base.html' %} {% load static %} {% block title %}TicketTopia{%
-endblock %} {% block extra_css %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/notice.css' %}" />
-{% endblock %} {% block content %}
+{% endblock %} 
+
+{% block content %}
 <main id="main_wrapper">
   <h2>공지사항</h2>
   <div id="info_text">
