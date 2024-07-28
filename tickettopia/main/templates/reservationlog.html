@@ -1,7 +1,10 @@
-{% extends 'base.html' %} {% load static %} {% block title %}TicketTopia{%
-endblock %} {% block extra_css %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/reservationlog.css' %}" />
-{% endblock %} {% block content %}
+{% endblock %} 
+{% block content %}
 <main id="main_wrapper">
   <h2>예매 내역</h2>
   {% if payment %}
@@ -39,7 +42,9 @@ endblock %} {% block extra_css %}
   <div class="no_log">예매 내역이 없습니다</div>
   {% endif %}
 </main>
-{% endblock %} {% block extra_js %}
+{% endblock %} 
+
+{% block extra_js %}
 <style>
   .no_log {
     font-size: 30px;

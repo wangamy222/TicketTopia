@@ -1,5 +1,8 @@
-{% extends 'base.html' %} {% load static %} {% block title %}TicketTopia{%
-endblock %} {% block extra_css %}
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/join.css' %}" />
 <link rel="stylesheet" href="{% static 'css/large_form.css' %}" />
 <link rel="stylesheet" href="{% static 'css/datepicker.css' %}" />
@@ -21,7 +24,9 @@ endblock %} {% block extra_css %}
     margin-top: 0px;
   }
 </style>
-{% endblock %} {% block content %}
+{% endblock %}
+
+{% block content %}
 <main id="main_wrapper">
   <h2>회원가입</h2>
   <div id="join_form">
