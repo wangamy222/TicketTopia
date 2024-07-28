@@ -11,48 +11,34 @@ from .models import User, Payment
 import logging
 logger = logging.getLogger(__name__)
 
+def user_has_reservation(user):
+    return Payment.objects.filter(uid=user.uid).exists()
+
 def check_auth(request):
     return JsonResponse({'is_authenticated': request.user.is_authenticated})
 
 def reservationlog(request):
+    context = {}
     if request.user.is_authenticated:
+        context['has_reservation'] = user_has_reservation(request.user)
         try:
-            # First filter, then get the latest
             payments = Payment.objects.filter(uid=request.user.uid).order_by('-seq')
-            if payments.exists():
-                payment = payments.first()
-            else:
-                payment = None
+            context['payment'] = payments.first() if payments.exists() else None
         except Payment.DoesNotExist:
-            payment = None
-    else:
-        payment = None
-
-    context = {
-        'payment': payment,
-        'user': request.user,
-    }
+            context['payment'] = None
+    context['user'] = request.user
     return render(request, 'reservationlog.html', context)
 
-
 def reservationcheck(request):
+    context = {}
     if request.user.is_authenticated:
+        context['has_reservation'] = user_has_reservation(request.user)
         try:
-            # First filter, then get the latest
             payments = Payment.objects.filter(uid=request.user.uid).order_by('-seq')
-            if payments.exists():
-                payment = payments.first()
-            else:
-                payment = None
+            context['payment'] = payments.first() if payments.exists() else None
         except Payment.DoesNotExist:
-            payment = None
-    else:
-        payment = None
-
-    context = {
-        'payment': payment,
-        'user': request.user,
-    }
+            context['payment'] = None
+    context['user'] = request.user
     return render(request, 'reservationcheck.html', context)
 
 @csrf_exempt
@@ -62,6 +48,12 @@ def create_payment(request):
         with transaction.atomic():
             last_payment = Payment.objects.last()
             seq = last_payment.seq + 1 if last_payment else 1
+
+            if seq > 30000:
+                return JsonResponse({
+                    'success': False,
+                    'error': '선착순 예매가 종료되었습니다. 예매가 확정되지 않았습니다.'
+                })
 
             payment = Payment.objects.create(
                 pid=f"ET-{seq}",
@@ -83,9 +75,10 @@ def create_payment(request):
 @login_required
 def reservation_view(request):
     context = {
-        'logged_in_user_name': request.user.name  
+        'logged_in_user_name': request.user.name,
+        'has_reservation': user_has_reservation(request.user)
     }
-    print(f"Passing user name to template: {request.user.name}")  
+    print(f"Passing user name to template: {request.user.name}")
     return render(request, 'reservation.html', context)
 
 def user_login(request):
@@ -107,6 +100,10 @@ def user_login(request):
   
 
 def join(request):
+    context = {}
+    if request.user.is_authenticated:
+        context['has_reservation'] = user_has_reservation(request.user)
+        
     if request.method == 'POST':
         uid = request.POST.get('uid')
         password = request.POST.get('password')
@@ -137,24 +134,35 @@ def join(request):
 
 @never_cache
 def joinSuccess(request):
+    context = {}
+    if request.user.is_authenticated:
+        context['has_reservation'] = user_has_reservation(request.user)
     if not request.session.pop('join_success', False):
         return redirect('join')
-    return render(request, 'joinSuccess.html')
-
+    return render(request, 'joinSuccess.html', context)
 
 def index(request):
-    return render(request, 'index.html')
-
+    context = {}
+    if request.user.is_authenticated:
+        context['has_reservation'] = user_has_reservation(request.user)
+    return render(request, 'index.html', context)
 
 def concertinfo(request):
-    return render(request, 'concertinfo.html')
-
+    context = {}
+    if request.user.is_authenticated:
+        context['has_reservation'] = user_has_reservation(request.user)
+    return render(request, 'concertinfo.html', context)
 
 def reservation(request):
+    context = {}
+    if request.user.is_authenticated:
+        context['has_reservation'] = user_has_reservation(request.user)
     if request.method == 'POST':
         pass
-    return render(request, 'reservation.html')
-
+    return render(request, 'reservation.html', context)
 
 def notice(request):
-    return render(request, 'notice.html')
+    context = {}
+    if request.user.is_authenticated:
+        context['has_reservation'] = user_has_reservation(request.user)
+    return render(request, 'notice.html', context)
