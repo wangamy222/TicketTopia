@@ -1,5 +1,5 @@
-{% extends 'base.html' %} {% load static %} {% block title %}Reservation -
-TicketTopia{% endblock %} {% block extra_css %}
+{% extends 'base.html' %} {% load static %} {% block title %}TicketTopia{%
+endblock %} {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/large_form.css' %}" />
 <link rel="stylesheet" href="{% static 'css/reservation.css' %}" />
 <style>
@@ -12,7 +12,16 @@ TicketTopia{% endblock %} {% block extra_css %}
   }
 </style>
 {% endblock %} {% block content %}
-<main id="main_wrapper" {% if user.is_authenticated %}data-logged-in-user-name="{{ user.name }}"{% endif %}>
+<main
+  id="main_wrapper"
+  {%
+  if
+  user.is_authenticated
+  %}data-logged-in-user-name="{{ user.name }}"
+  {%
+  endif
+  %}
+>
   <h2>TAYLOR SWIFT: THE ERAS TOUR</h2>
   <h3>2024. 08. 07</h3>
   <div id="join_form">

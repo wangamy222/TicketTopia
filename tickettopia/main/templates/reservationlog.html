@@ -1,9 +1,10 @@
-{% extends 'base.html' %} {% load static %} {% block title %}Reservation log -
-TicketTopia{% endblock %} {% block extra_css %}
+{% extends 'base.html' %} {% load static %} {% block title %}TicketTopia{%
+endblock %} {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/reservationlog.css' %}" />
 {% endblock %} {% block content %}
 <main id="main_wrapper">
-  <h2>예매 내역</h2>{% if payment %}
+  <h2>예매 내역</h2>
+  {% if payment %}
   <div id="ticket_wrapper">
     <div id="image_wrapper">
       <img
@@ -13,7 +14,7 @@ TicketTopia{% endblock %} {% block extra_css %}
     </div>
     <div id="ticket_info_wrapper">
       <h3>TAYLOR SWIFT: THE ERAS TOUR</h3>
-      
+
       <div id="ticket_info">
         <div id="ticket_number">
           <p>티켓번호</p>
@@ -36,10 +37,9 @@ TicketTopia{% endblock %} {% block extra_css %}
   </div>
   {% else %}
   <div class="no_log">예매 내역이 없습니다</div>
-{% endif %}
+  {% endif %}
 </main>
-{% endblock %}
-{% block extra_js %}
+{% endblock %} {% block extra_js %}
 <style>
   .no_log {
     font-size: 30px;

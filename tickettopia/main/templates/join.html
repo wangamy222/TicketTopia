@@ -1,13 +1,12 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Join - TicketTopia{% endblock %}
-
-{% block extra_css %}
+{% extends 'base.html' %} {% load static %} {% block title %}TicketTopia{%
+endblock %} {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/join.css' %}" />
 <link rel="stylesheet" href="{% static 'css/large_form.css' %}" />
 <link rel="stylesheet" href="{% static 'css/datepicker.css' %}" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+/>
 <style>
   h2 {
     font-size: 30px;
@@ -22,9 +21,7 @@
     margin-top: 0px;
   }
 </style>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <main id="main_wrapper">
   <h2>회원가입</h2>
   <div id="join_form">
@@ -100,27 +97,27 @@
       disableMobile: "true",
     });
   });
-  document.querySelector('form').addEventListener('submit', function(e) {
+  document.querySelector("form").addEventListener("submit", function (e) {
     e.preventDefault();
-    
-    fetch('/join/', {
-        method: 'POST',
-        body: new FormData(this),
+
+    fetch("/join/", {
+      method: "POST",
+      body: new FormData(this),
     })
-    .then(response => response.json())
-    .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.success) {
-            alert(data.message);
-            window.location.href = data.redirect_url;
+          alert(data.message);
+          window.location.href = data.redirect_url;
         } else {
-            alert(data.message);
+          alert(data.message);
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred. Please try again.');
-    });
-});
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again.");
+      });
+  });
 </script>
 
 {% endblock %}
