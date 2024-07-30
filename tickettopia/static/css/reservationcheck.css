@@ -1,0 +1,59 @@
+#main_wrapper {
+  background-color: #333;
+  width: 90dvw;
+  height: 71dvh;
+  position: absolute;
+  top: 150%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+h2 {
+  font-family: "Pretendard-Regular";
+  letter-spacing: 0.4rem;
+  font-size: 40px;
+  text-align: center;
+  padding-top: 15px;
+  color: #fff;
+}
+
+#image_wrapper {
+  width: 209px;
+  height: 244px;
+  margin: 10px auto 20px;
+}
+
+#image_wrapper img {
+  width: 100%;
+  height: 100%;
+}
+
+h3 {
+  font-family: "Ralphie";
+  font-size: 30px;
+  text-align: center;
+}
+
+#ticket_info {
+  width: fit-content;
+  margin: 20px auto 0;
+}
+
+#ticket_info div {
+  display: flex;
+  font-family: "Pretendard-Regular";
+  font-size: 30px;
+  margin-bottom: 15px;
+  color: rgb(245, 198, 175);
+}
+
+#ticket_info div p:first-of-type {
+  margin-right: 70px;
+  color: #fff;
+}
+
+#ticket_info div:not(#ticket_number) p:nth-of-type(2) {
+  margin-left: 53px;
+}
+
+

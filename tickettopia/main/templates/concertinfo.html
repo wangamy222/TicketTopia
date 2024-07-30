@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/concertinfo.css' %}" />
+{% endblock %} 
+
+{% block content %}
+
+<main id="main_wrapper">
+  <h2>공연 정보</h2>
+  <div id="info_wrapper">
+    <div id="image_wrapper">
+      <img
+        src="{% static 'img/taylor_poster.jpg' %}"
+        alt="Taylor Swift The Eras Concert Poster"
+      />
+    </div>
+    <div id="concert_info_wrapper">
+      <p>
+        그래미 어워드 12관왕, 팝의 여왕
+        <br />
+        티켓토피아 콘서트 테일러 스위프트: 디 에라스 투어 (Taylor Swift: The
+        Eras Tour)
+        <br />
+        21세기를 대표하는 싱어송라이터이자 글로벌 팝스타 테일러 스위프트(Taylor
+        Swift)가 '테일러 스위프트: 디 에라스 투어 (Taylor Swift: The Eras
+        Tour)'로, 오는 8월 한국을 찾는다. 이번 '티켓토피아 콘서트'는 테일러
+        스위프트의 첫 내한 공연으로, 한국 팬들에게 특별한 의미를 지닌다.
+        <br />
+        <br />
+        테일러 스위프트는 데뷔 이후 발표한 모든 앨범이 전 세계적으로 폭발적인
+        인기를 얻으며 팝의 상징적인 인물로 자리매김했다. 첫 앨범 부터 <1989>,
+        그리고 2021년 발표한 <Fearless (Taylor's Version)>까지 그녀의 모든
+        작품은 빌보드 차트를 석권했다. 국내에서도 엄청난 사랑을 받고 있다.
+        <br />
+        <br />
+        테일러 스위프트는 그녀의 독창적인 음악적 감성과 스토리텔링을 겸비한
+        가사로 총 12회의 그래미 어워드를 수상하며 음악적 인정을 받아왔다. 그녀는
+        2010년 로 '올해의 앨범'을 수상한 이후, 2016년 <1989>로 또다시 '올해의
+        앨범'을 수상하며 음악계에 큰 반향을 일으켰다. 특히 최근 재 발매한 <1989>
+        는 그녀의 음악적 다양성을 보여주며 비평가들의 극찬을 받았다.
+        <br />
+        <br />
+        첫번째 티켓토피아 콘서트의 주인공 테일러 스위프트는 노래는 물론 작곡,
+        연주, 퍼포먼스 등 전 분야에서 뛰어난 실력을 보유한 아티스트다. 그녀는
+        컨트리 음악으로 시작해 팝, 록, 인디 등 다양한 장르를 아우르는 음악적
+        스펙트럼을 자랑하며, 이번 공연을 통해 국내 팬들에게 잊지 못할 무대를
+        선사할 예정이다.
+        <br />
+        <br />
+        <br />
+        <span>캐스팅</span>
+        <br />
+        테일러 스위프트(Taylor Swift)
+        <br />
+        <br />
+        <span>기획사정보</span><br />
+        주최: 티켓토피아
+        <br />
+        주관: 라이브뮤직코리아
+      </p>
+    </div>
+  </div>
+</main> 
+{% endblock %}

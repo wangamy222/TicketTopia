@@ -1,0 +1,28 @@
+#main_wrapper {
+  background-color: #333;
+  width: 90dvw;
+  height: 71dvh;
+  position: absolute;
+  top: 150%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+
+h2 {
+  font-family: "Pretendard-Regular";
+  letter-spacing: 0.4rem;
+  font-size: 40px;
+  text-align: center;
+  padding: 30px 0;
+  color: #fff;
+}
+
+p{
+    font-size: 30px;
+    text-align: center;
+    font-weight: normal;
+    color: #dcdcdc;
+    margin-top: 50px;
+}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/joinSuccess.css' %}" />
+{% endblock %} 
+
+{% block content %}
+
+<main id="main_wrapper">
+  <h2>회원 가입 성공!</h2>
+  <div id="info_text">
+    <p>
+      회원가입에 성공하였습니다. <br />
+      로그인 해주세요!
+    </p>
+  </div>
+</main>
+{% endblock %}

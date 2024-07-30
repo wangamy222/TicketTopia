@@ -1,0 +1,33 @@
+version: "3"
+services:
+  nginx:
+    container_name: mysitenginx
+    image: nginx:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - was
+    volumes:
+      - $PWD/html:/etc/nginx/conf.d
+      - static_volume:/static
+    restart: always
+    
+  was:
+    build: .
+    hostname: was
+    container_name: mysitewas
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/code
+      - static_volume:/static
+    command: >
+      sh -c "
+      python3 manage.py migrate &&
+      python3 manage.py collectstatic --noinput &&
+      gunicorn --bind 0.0.0.0:8080 tickettopia.wsgi:application
+      "
+    restart: always
+
+volumes:
+  static_volume:

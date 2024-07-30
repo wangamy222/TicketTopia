@@ -1,0 +1,42 @@
+@font-face {
+    font-family: "Pretendard-Regular";
+    src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+      format("woff");
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .date-input-wrapper {
+    position: relative;
+  }
+
+  .date-input-wrapper input {
+    padding-right: 30px;
+    box-sizing: border-box;
+  }
+
+  .date-input-wrapper::after {
+    content: "\1F4C5";
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .flatpickr-calendar,
+  .flatpickr-current-month .flatpickr-monthDropdown-months,
+  .flatpickr-current-month input.cur-year,
+  .flatpickr-weekday,
+  .flatpickr-day {
+    font-family: "Pretendard-Regular" !important;
+  }
+
+  .flatpickr-calendar {
+    font-size: 14px;
+  }
+
+  .flatpickr-current-month .flatpickr-monthDropdown-months,
+  .flatpickr-current-month input.cur-year {
+    font-weight: 400;
+  }

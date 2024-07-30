@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}TicketTopia{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/general.css' %}" />
+    {% block extra_css %}{% endblock %}
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="content_wrapper">
+        <header>
+          <div class="logo_wrapper">
+            <a href="{% url 'index' %}" class="logo">
+              <img src="{% static 'img/Logo.svg' %}" alt="TicketTopia Logo" />
+            </a>
+          </div>
+        </header>
+        <nav>{% include 'partials/nav.html' %}</nav>
+        {% block content %}{% endblock %}
+        <footer><p>© 2024 TicketTopia All rights reserved.</p></footer>
+      </div>
+    </div>
+    {% include 'partials/sidemenu.html' %} 
+    {% include 'partials/login_modal.html' %}
+
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/toggle.js' %}"></script>
+    <script src="{% static 'js/pay.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

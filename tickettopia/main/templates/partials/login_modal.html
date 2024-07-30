@@ -1,0 +1,87 @@
+{% load static %}
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+
+<div id="login_modal_wrapper" class="{% if user.is_authenticated %}hidden{% endif %}">
+  <div id="login_modal">
+    <div class="close">
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M31.2668 28L45.9668 13.3C46.9002 12.3666 46.9002 10.9666 45.9668 10.0333C45.0335 9.09998 43.6335 9.09998 42.7002 10.0333L28.0002 24.7333L13.3002 10.0333C12.3668 9.09998 10.9668 9.09998 10.0335 10.0333C9.10016 10.9666 9.10016 12.3666 10.0335 13.3L24.7335 28L10.0335 42.7C9.56683 43.1666 9.3335 43.6333 9.3335 44.3333C9.3335 45.7333 10.2668 46.6666 11.6668 46.6666C12.3668 46.6666 12.8335 46.4333 13.3002 45.9666L28.0002 31.2666L42.7002 45.9666C43.1668 46.4333 43.6335 46.6666 44.3335 46.6666C45.0335 46.6666 45.5002 46.4333 45.9668 45.9666C46.9002 45.0333 46.9002 43.6333 45.9668 42.7L31.2668 28Z" fill="white"/>
+      </svg>
+    </div>
+    <div class="logo_wrapper">
+      <div class="logo">
+        <img src="{% static 'img/Logo.svg' %}" alt="TicketTopia Logo" />
+      </div>
+    </div>
+    <div id="login_form">
+      <form id="loginForm" method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div>
+          <label for="userLoginId">아이디</label>
+          <input
+            type="text"
+            id="userLoginId"
+            name="uid"
+            required
+            placeholder="아이디를 입력해 주세요"
+          />
+        </div>
+        <div>
+          <label for="userLoginPassword">비밀번호</label>
+          <input
+            type="password"
+            id="userLoginPassword"
+            name="password"
+            required
+            placeholder="비밀번호를 입력해 주세요"
+          />
+        </div>
+        <div>
+          <button type="submit">로그인</button>
+        </div>
+      </form>
+      <div id="join">
+        <p><a href="{% url 'join' %}">회원가입</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#loginForm').on('submit', function(e) {
+      e.preventDefault();
+
+      let formData = {
+        uid: $('#userLoginId').val(),
+        password: $('#userLoginPassword').val(),
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+      };
+
+      $.ajax({
+        type: 'POST',
+        url: "{% url 'login' %}",
+        data: formData,
+        dataType: 'json',
+        success: function(response) {
+          if (response.success) {
+            window.location.href = response.redirect_url;
+          } else {
+            alert(response.message || '로그인 실패. 다시 시도해 주세요.');
+          }
+        },
+        error: function(xhr, status, error) {
+          console.log("Status: " + status);
+          console.log("Error: " + error);
+          console.log("Response: " + xhr.responseText);
+          alert('오류가 발생했습니다. 다시 시도해 주세요');
+        }
+      });
+    });
+  });
+</script>

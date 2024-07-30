@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/reservationlog.css' %}" />
+{% endblock %} 
+{% block content %}
+<main id="main_wrapper">
+  <h2>예매 내역</h2>
+  {% if payment %}
+  <div id="ticket_wrapper">
+    <div id="image_wrapper">
+      <img
+        src="{% static 'img/taylor_poster.jpg' %}"
+        alt="Taylor Swift The Eras Concert Poster"
+      />
+    </div>
+    <div id="ticket_info_wrapper">
+      <h3>TAYLOR SWIFT: THE ERAS TOUR</h3>
+
+      <div id="ticket_info">
+        <div id="ticket_number">
+          <p>티켓번호</p>
+          <p>{{ payment.tid }}</p>
+        </div>
+        <div id="ticket_date">
+          <p>날짜</p>
+          <p>2024/09/30 19:00</p>
+        </div>
+        <div id="ticket_name">
+          <p>이름</p>
+          <p>{{ payment.uname }}</p>
+        </div>
+        <div id="ticket_seat">
+          <p>좌석</p>
+          <p>{{ payment.pid }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="no_log">예매 내역이 없습니다</div>
+  {% endif %}
+</main>
+{% endblock %} 
+
+{% block extra_js %}
+<style>
+  .no_log {
+    font-size: 30px;
+    text-align: center;
+    margin-top: 23dvh;
+  }
+</style>
+{% endblock %}
