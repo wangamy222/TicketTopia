@@ -2,12 +2,12 @@ resource "aws_ecs_cluster" "TicketTopia_cluster" {
   name = "TicketTopia-cluster"
 }
 
-resource "aws_ecr_repository" "TicketTopia_django_app" {
-  name = "TicketTopia-django-app"
+resource "aws_ecr_repository" "tickettopia_django_app" {
+  name = "tickettopia-django-app"
 }
 
-resource "aws_ecr_repository" "TicketTopia_nginx" {
-  name = "TicketTopia-nginx"
+resource "aws_ecr_repository" "tickettopia_nginx" {
+  name = "tickettopia-nginx"
 }
 
 resource "aws_ecs_task_definition" "TicketTopia_task" {
@@ -21,7 +21,7 @@ resource "aws_ecs_task_definition" "TicketTopia_task" {
   container_definitions = jsonencode([
     {
       name  = "nginx"
-      image = "${aws_ecr_repository.TicketTopia_nginx.repository_url}:latest"
+      image = "${aws_ecr_repository.tickettopia_nginx.repository_url}:latest"
       portMappings = [
         {
           containerPort = 80
@@ -39,7 +39,7 @@ resource "aws_ecs_task_definition" "TicketTopia_task" {
     },
     {
       name  = "django-app"
-      image = "${aws_ecr_repository.TicketTopia_django_app.repository_url}:latest"
+      image = "${aws_ecr_repository.ticketTopia_django_app.repository_url}:latest"
       portMappings = [
         {
           containerPort = 8080
