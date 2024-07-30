@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block extra_css %}
+<style>
+  #waiting_container {
+    font-family: "Pretendard-Regular";
+    margin: 0 auto;
+    width: max-content;
+    position: absolute;
+    top: 200%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 30px;
+    text-align: center;
+  }
+  h1 {
+    font-family: "Ralphie";
+    font-size: 60px;
+    margin-bottom: 50px;
+  }
+  #queue-status, #queue-position, #remaining-time {
+    margin-bottom: 20px;
+  }
+  #queue-position, #remaining-time {
+    font-weight: bold;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="waiting_container">
+  <h1>Waiting Room</h1>
+  <div id="queue-status">대기열에 입장하였습니다!</div>
+  <div id="queue-position">대기번호 찾는중...</div>
+  <div id="remaining-time"></div>
+</div>
+
+<script>
+    let remainingSeconds = 0;
+    let timerInterval;
+    let currentPosition = 0;
+    
+    function formatTime(seconds) {
+        return `${seconds}초`;
+    }
+    
+    function updateTimer() {
+        if (remainingSeconds > 0) {
+            remainingSeconds--;
+            document.getElementById('remaining-time').textContent = `예상 대기 시간: ${formatTime(remainingSeconds)}`;
+        }
+        if (remainingSeconds <= 0) {
+            clearInterval(timerInterval);
+            checkQueueStatus();
+        }
+    }
+    
+    function startTimer(seconds) {
+        clearInterval(timerInterval);
+        remainingSeconds = seconds;
+        updateTimer();
+        timerInterval = setInterval(updateTimer, 1000);
+    }
+    
+    function checkQueueStatus() {
+        fetch('{% url "check_queue_status" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Queue status data:', data);
+            if (data.success) {
+                if (data.status === 'ready') {
+                    clearInterval(timerInterval);
+                    document.getElementById('queue-status').textContent = '회원님의 차례예요!';
+                    document.getElementById('queue-position').textContent = '예매 페이지로 넘어갑니다...';
+                    document.getElementById('remaining-time').textContent = '';
+                    setTimeout(() => {
+                        window.location.href = '{% url "reservation" %}';
+                    }, 1000);
+                } else {
+                    if (data.position !== currentPosition || remainingSeconds <= 0) {
+                        currentPosition = data.position;
+                        document.getElementById('queue-position').textContent = `회원님의 대기번호: ${currentPosition}`;
+                        const waitTime = (currentPosition - 1) * 10; // 10 seconds per position ahead
+                        startTimer(waitTime);
+                    }
+                }
+            } else {
+                document.getElementById('queue-status').textContent = '대기열 상태 확인에 실패했습니다: ' + data.error;
+                document.getElementById('queue-position').textContent = '';
+                document.getElementById('remaining-time').textContent = '';
+                setTimeout(checkQueueStatus, 5000);
+            }
+        })
+        .catch(error => {
+            document.getElementById('queue-status').textContent = '네트워크 오류가 발생했습니다. 다시 시도해주세요.';
+            document.getElementById('queue-position').textContent = '';
+            document.getElementById('remaining-time').textContent = '';
+            console.error('Error:', error);
+            setTimeout(checkQueueStatus, 5000);
+        });
+    }
+    
+    // Start checking queue status immediately when the page loads
+    checkQueueStatus();
+    </script>
+{% endblock %}

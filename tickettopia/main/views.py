@@ -7,6 +7,66 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from .models import User, Payment
+from .queue_manager import SQSManager
+from django.contrib.auth.decorators import login_required
+
+sqs_manager = SQSManager()
+
+
+@csrf_exempt
+@require_POST
+def join_queue(request):
+    if request.user.is_authenticated:
+        sqs_manager.send_message(request.user.uid)
+        request.session['in_queue'] = True
+        return JsonResponse({'success': True, 'message': 'Joined queue successfully'})
+    return JsonResponse({'success': False, 'error': 'User not authenticated'})
+
+@login_required
+def waiting_room(request):
+    # Ensure the user is in the queue
+    if not request.session.get('in_queue', False):
+        sqs_manager.send_message(request.user.uid)
+        request.session['in_queue'] = True
+    return render(request, 'waiting_room.html')
+
+@csrf_exempt
+@require_POST
+def check_queue_status(request):
+    if request.user.is_authenticated:
+        position = sqs_manager.get_queue_position(request.user.uid)
+        print(f"User {request.user.uid} position: {position}")  # Debugging line
+        if position == 1:
+            request.session['in_queue'] = False  # User is ready, remove from queue
+            return JsonResponse({'success': True, 'status': 'ready'})
+        elif position > 1:
+            return JsonResponse({
+                'success': True, 
+                'status': 'waiting', 
+                'position': position
+            })
+        else:
+            # User not found in queue, add them back
+            sqs_manager.send_message(request.user.uid)
+            new_position = sqs_manager.get_queue_position(request.user.uid)
+            return JsonResponse({
+                'success': True, 
+                'status': 'waiting', 
+                'position': new_position
+            })
+    return JsonResponse({'success': False, 'error': 'User not authenticated'})
+
+@login_required
+def reservation_view(request):
+    if sqs_manager.is_user_turn(request.user.uid):
+        context = {
+            'logged_in_user_name': request.user.name,
+            'has_reservation': user_has_reservation(request.user)
+        }
+        return render(request, 'reservation.html', context)
+    else:
+        # Redirect to waiting room if not user's turn
+        return redirect('waiting_room')
 
 import logging
 logger = logging.getLogger(__name__)
@@ -57,7 +117,7 @@ def create_payment(request):
 
             payment = Payment.objects.create(
                 pid=f"ET-{seq}",
-                tid=f"TS-07272024-{seq}",
+                tid=f"TS-08092024-{seq}",
                 uid=request.user.uid if request.user.is_authenticated else 'anonymous',
                 uname=request.user.name if request.user.is_authenticated else 'Anonymous',
                 state='1'
@@ -94,7 +154,7 @@ def user_login(request):
             if not user_exists:
                 return JsonResponse({'success': False, 'message': '등록된 사용자가 아닙니다'})
             else:
-                return JsonResponse({'success': False, 'message': 'Invalid credentials'})
+                return JsonResponse({'success': False, 'message': '비밀번호가 틀렸습니다'})
 
     return render(request, 'index.html', {'user': request.user})
   

@@ -19,7 +19,7 @@
       <li><a href="{% url 'concertinfo' %}">공연정보</a></li>
       {% if user.is_authenticated %}
         {% if not has_reservation %}
-          <li><a href="{% url 'reservation' %}">예매하기</a></li>
+          <li id="join-queue-btn"><a href="{% url 'waiting_room' %}">예매하기</a></li>
         {% endif %}
         <li><a href="{% url 'reservationlog' %}">예매내역</a></li>
       {% endif %}
@@ -27,3 +27,24 @@
     </ul>
   </div>
 </div>
+
+<script>
+  document.getElementById('join-queue-btn').addEventListener('click', function(e) {
+      e.preventDefault();
+      fetch('{% url "join_queue" %}', {
+          method: 'POST',
+          headers: {
+              'X-CSRFToken': '{{ csrf_token }}',
+              'Content-Type': 'application/json',
+          },
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              window.location.href = '{% url "waiting_room" %}';
+          } else {
+              alert('대기열 입장에 실패했습니다: ' + data.error);
+          }
+      });
+  });
+  </script>
