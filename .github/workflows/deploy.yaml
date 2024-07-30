@@ -33,7 +33,7 @@ jobs:
       working-directory: ./terraform
       run: terraform apply -auto-approve
 
-    - name: Login to Amazon ECR
+    - name: Login to Amazon ECR for image
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
