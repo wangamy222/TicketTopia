@@ -39,7 +39,7 @@ resource "aws_ecs_task_definition" "TicketTopia_task" {
     },
     {
       name  = "django-app"
-      image = "${aws_ecr_repository.ticketTopia_django_app.repository_url}:latest"
+      image = "${aws_ecr_repository.tickettopia_django_app.repository_url}:latest"
       portMappings = [
         {
           containerPort = 8080
