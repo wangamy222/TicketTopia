@@ -16,6 +16,11 @@ resource "aws_security_group" "TicketTopia_alb_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes = [name]
+  }
 }
 
 resource "aws_security_group" "TicketTopia_ecs_sg" {

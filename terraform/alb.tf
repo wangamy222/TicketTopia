@@ -34,4 +34,9 @@ resource "aws_lb_target_group" "TicketTopia_tg" {
     interval            = 300
     matcher             = "200"
   }
+
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes = [name]
+  }
 }

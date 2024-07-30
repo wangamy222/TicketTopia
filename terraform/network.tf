@@ -20,6 +20,11 @@ resource "aws_subnet" "TicketTopia_public1" {
   tags = {
     Name = "TicketTopia-public-subnet-1"
   }
+
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes = [name]
+  }
 }
 
 resource "aws_subnet" "TicketTopia_public2" {
@@ -31,6 +36,11 @@ resource "aws_subnet" "TicketTopia_public2" {
   tags = {
     Name = "TicketTopia-public-subnet-2"
   }
+  
+  lifecycle {
+    prevent_destroy = true
+    ignore_changes = [name]
+  }
 }
 
 resource "aws_internet_gateway" "TicketTopia_igw" {
@@ -38,6 +48,10 @@ resource "aws_internet_gateway" "TicketTopia_igw" {
 
   tags = {
     Name = "TicketTopia-igw"
+  }
+
+  lifecycle {
+    prevent_destroy = true
   }
 }
 

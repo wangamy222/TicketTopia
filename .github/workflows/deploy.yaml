@@ -41,11 +41,29 @@ jobs:
         terraform import aws_ecr_repository.tickettopia_nginx tickettopia-nginx || true
         terraform import aws_iam_role.TicketTopia_ecs_execution_role TicketTopia_ecs_execution_role || true
         
-        # For VPC, we need to get the VPC ID first
+        # For VPC and related resources
         VPC_ID=$(aws ec2 describe-vpcs --filters "Name=tag:Name,Values=TicketTopia-vpc" --query "Vpcs[0].VpcId" --output text)
         if [ "$VPC_ID" != "None" ]; then
           terraform import aws_vpc.TicketTopia_vpc $VPC_ID || true
+          
+          # Import subnets
+          SUBNET1_ID=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID" "Name=cidr-block,Values=10.0.1.0/24" --query "Subnets[0].SubnetId" --output text)
+          SUBNET2_ID=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=$VPC_ID" "Name=cidr-block,Values=10.0.2.0/24" --query "Subnets[0].SubnetId" --output text)
+          terraform import aws_subnet.TicketTopia_public1 $SUBNET1_ID || true
+          terraform import aws_subnet.TicketTopia_public2 $SUBNET2_ID || true
+          
+          # Import Internet Gateway
+          IGW_ID=$(aws ec2 describe-internet-gateways --filters "Name=attachment.vpc-id,Values=$VPC_ID" --query "InternetGateways[0].InternetGatewayId" --output text)
+          terraform import aws_internet_gateway.TicketTopia_igw $IGW_ID || true
+          
+          # Import security groups
+          ALB_SG_ID=$(aws ec2 describe-security-groups --filters "Name=vpc-id,Values=$VPC_ID" "Name=group-name,Values=TicketTopia-alb-sg" --query "SecurityGroups[0].GroupId" --output text)
+          terraform import aws_security_group.TicketTopia_alb_sg $ALB_SG_ID || true
         fi
+        
+        # Import ALB target group
+        TG_ARN=$(aws elbv2 describe-target-groups --names TicketTopia-tg --query "TargetGroups[0].TargetGroupArn" --output text)
+        terraform import aws_lb_target_group.TicketTopia_tg $TG_ARN || true
 
     - name: Terraform Plan
       working-directory: ./terraform
@@ -55,36 +73,4 @@ jobs:
       working-directory: ./terraform
       run: terraform apply -auto-approve tfplan
 
-    - name: Login to Amazon ECR for image
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
-
-    - name: Authenticate Docker to Amazon ECR
-      run: |
-        aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
-
-    - name: Build and push Nginx image to ECR
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: tickettopia-nginx
-        IMAGE_TAG: latest
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./nginx
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-    - name: Build and push Django app image to ECR
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: tickettopia-django-app
-        IMAGE_TAG: latest
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./tickettopia
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-    - name: Terraform Plan (Final)
-      working-directory: ./terraform
-      run: terraform plan -out=tfplan_final
-
-    - name: Terraform Apply (Final)
-      working-directory: ./terraform
-      run: terraform apply -auto-approve tfplan_final
+    # ... rest of your workflow ...
