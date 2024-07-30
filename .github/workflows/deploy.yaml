@@ -32,13 +32,13 @@ jobs:
       working-directory: ./terraform
       run: terraform init
 
-    - name: Terraform Plan
-      working-directory: ./terraform
-      run: terraform plan -out=tfplan
-
     - name: Terraform Refresh
       working-directory: ./terraform
       run: terraform refresh
+
+    - name: Terraform Plan
+      working-directory: ./terraform
+      run: terraform plan -out=tfplan
 
     - name: Terraform Apply
       working-directory: ./terraform
@@ -70,6 +70,10 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./tickettopia
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+    - name: Terraform Plan (Final)
+      working-directory: ./terraform
+      run: terraform plan -out=tfplan_final
+
     - name: Terraform Apply (Final)
       working-directory: ./terraform
-      run: terraform apply -auto-approve
+      run: terraform apply -auto-approve tfplan_final
