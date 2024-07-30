@@ -8,6 +8,7 @@ on:
       - 'terraform/**'
       - 'tickettopia/**'
       - 'nginx/**'
+      - '.github/**'
 
 jobs:
   deploy:
@@ -30,6 +31,10 @@ jobs:
     - name: Terraform Init
       working-directory: ./terraform
       run: terraform init
+
+    - name: Terraform Refresh
+      working-directory: ./terraform
+      run: terraform refresh
 
     - name: Terraform Apply (Initial)
       working-directory: ./terraform
