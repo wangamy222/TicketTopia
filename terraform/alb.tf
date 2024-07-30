@@ -36,7 +36,7 @@ resource "aws_lb_target_group" "TicketTopia_tg" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    create_before_destroy = true
     ignore_changes = [name]
   }
 }
