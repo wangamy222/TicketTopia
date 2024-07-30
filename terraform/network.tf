@@ -7,7 +7,7 @@ resource "aws_vpc" "TicketTopia_vpc" {
   }
 
   lifecycle {
-    ignore_changes = [cidr_block]
+    prevent_destroy = true
   }
 }
 

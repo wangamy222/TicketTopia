@@ -6,7 +6,7 @@ resource "aws_ecr_repository" "tickettopia_django_app" {
   name = "tickettopia-django-app"
 
   lifecycle {
-    ignore_changes = [name]
+    prevent_destroy = true
   }
 }
 
@@ -14,7 +14,7 @@ resource "aws_ecr_repository" "tickettopia_nginx" {
   name = "tickettopia-nginx"
 
   lifecycle {
-    ignore_changes = [name]
+    prevent_destroy = true
   }
 }
 

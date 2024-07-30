@@ -15,7 +15,7 @@ resource "aws_iam_role" "TicketTopia_ecs_execution_role" {
   })
 
   lifecycle {
-    ignore_changes = [name]
+    prevent_destroy = true
   }
 }
 

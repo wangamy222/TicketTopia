@@ -32,9 +32,20 @@ jobs:
       working-directory: ./terraform
       run: terraform init
 
-    - name: Terraform Refresh
+    - name: Import existing resources
       working-directory: ./terraform
-      run: terraform refresh
+      run: |
+        terraform import aws_cloudwatch_log_group.TicketTopia_nginx_logs /ecs/TicketTopia-nginx || true
+        terraform import aws_cloudwatch_log_group.TicketTopia_django_logs /ecs/TicketTopia-django-app || true
+        terraform import aws_ecr_repository.tickettopia_django_app tickettopia-django-app || true
+        terraform import aws_ecr_repository.tickettopia_nginx tickettopia-nginx || true
+        terraform import aws_iam_role.TicketTopia_ecs_execution_role TicketTopia_ecs_execution_role || true
+        
+        # For VPC, we need to get the VPC ID first
+        VPC_ID=$(aws ec2 describe-vpcs --filters "Name=tag:Name,Values=TicketTopia-vpc" --query "Vpcs[0].VpcId" --output text)
+        if [ "$VPC_ID" != "None" ]; then
+          terraform import aws_vpc.TicketTopia_vpc $VPC_ID || true
+        fi
 
     - name: Terraform Plan
       working-directory: ./terraform

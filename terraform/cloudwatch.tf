@@ -3,7 +3,7 @@ resource "aws_cloudwatch_log_group" "TicketTopia_nginx_logs" {
   retention_in_days = 30
 
   lifecycle {
-    ignore_changes = [name]
+    prevent_destroy = true
   }
 }
 
@@ -12,6 +12,6 @@ resource "aws_cloudwatch_log_group" "TicketTopia_django_logs" {
   retention_in_days = 30
 
   lifecycle {
-    ignore_changes = [name]
+    prevent_destroy = true
   }
 }
