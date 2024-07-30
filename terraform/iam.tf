@@ -13,6 +13,10 @@ resource "aws_iam_role" "TicketTopia_ecs_execution_role" {
       }
     ]
   })
+    
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "TicketTopia_ecs_execution_role_policy" {
