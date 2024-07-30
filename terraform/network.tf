@@ -23,7 +23,7 @@ resource "aws_subnet" "TicketTopia_public1" {
 
   lifecycle {
     prevent_destroy = true
-    ignore_changes = [name]
+    ignore_changes = [cidr_block]
   }
 }
 
@@ -39,7 +39,7 @@ resource "aws_subnet" "TicketTopia_public2" {
   
   lifecycle {
     prevent_destroy = true
-    ignore_changes = [name]
+    ignore_changes = [cidr_block]
   }
 }
 
