@@ -4,10 +4,18 @@ resource "aws_ecs_cluster" "TicketTopia_cluster" {
 
 resource "aws_ecr_repository" "tickettopia_django_app" {
   name = "tickettopia-django-app"
+
+  lifecycle {
+    ignore_changes = [name]
+  }
 }
 
 resource "aws_ecr_repository" "tickettopia_nginx" {
   name = "tickettopia-nginx"
+
+  lifecycle {
+    ignore_changes = [name]
+  }
 }
 
 resource "aws_ecs_task_definition" "TicketTopia_task" {

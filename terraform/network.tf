@@ -5,6 +5,10 @@ resource "aws_vpc" "TicketTopia_vpc" {
   tags = {
     Name = "TicketTopia-vpc"
   }
+
+  lifecycle {
+    ignore_changes = [cidr_block]
+  }
 }
 
 resource "aws_subnet" "TicketTopia_public1" {

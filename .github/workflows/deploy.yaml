@@ -32,25 +32,17 @@ jobs:
       working-directory: ./terraform
       run: terraform init
 
-    - name: Check Terraform State
-      id: check_state
+    - name: Terraform Plan
       working-directory: ./terraform
-      run: |
-        if terraform show -no-color > /dev/null 2>&1; then
-          echo "terraform_exists=true" >> $GITHUB_OUTPUT
-        else
-          echo "terraform_exists=false" >> $GITHUB_OUTPUT
-        fi
+      run: terraform plan -out=tfplan
 
     - name: Terraform Refresh
-      if: steps.check_state.outputs.terraform_exists == 'true'
       working-directory: ./terraform
       run: terraform refresh
 
-    - name: Terraform Apply (Initial)
-      if: steps.check_state.outputs.terraform_exists == 'true'
+    - name: Terraform Apply
       working-directory: ./terraform
-      run: terraform apply -auto-approve
+      run: terraform apply -auto-approve tfplan
 
     - name: Login to Amazon ECR for image
       id: login-ecr
@@ -79,11 +71,5 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
     - name: Terraform Apply (Final)
-      if: steps.check_state.outputs.terraform_exists == 'true'
       working-directory: ./terraform
       run: terraform apply -auto-approve
-
-    - name: Terraform Plan (If state doesn't exist)
-      if: steps.check_state.outputs.terraform_exists == 'false'
-      working-directory: ./terraform
-      run: terraform plan
