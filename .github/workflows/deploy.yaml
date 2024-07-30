@@ -3,7 +3,7 @@ name: Update ECR Image
 on:
   push:
     paths:
-      - 'image_update/**'
+      - 'terrafrom/**'
 
 jobs:
   terraform-apply:
@@ -24,9 +24,9 @@ jobs:
       uses: hashicorp/setup-terraform@v2
 
     - name: Terraform Init
-      working-directory: ./image_update
+      working-directory: ./terraform
       run: terraform init
 
     - name: Terraform Apply
-      working-directory: ./image_update
+      working-directory: ./terraform
       run: terraform apply -auto-approve
