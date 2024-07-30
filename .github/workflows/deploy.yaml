@@ -32,17 +32,23 @@ jobs:
       working-directory: ./terraform
       run: terraform init
 
-    - name: Targeted Terraform Refresh
+    - name: Check Terraform State
+      id: check_state
       working-directory: ./terraform
       run: |
-        terraform refresh -target=aws_cloudwatch_log_group.TicketTopia_nginx_logs
-        terraform refresh -target=aws_cloudwatch_log_group.TicketTopia_django_logs
-        terraform refresh -target=aws_ecr_repository.tickettopia_django_app
-        terraform refresh -target=aws_ecr_repository.tickettopia_nginx
-        terraform refresh -target=aws_iam_role.TicketTopia_ecs_execution_role
-        terraform refresh -target=aws_vpc.TicketTopia_vpc
+        if terraform show -no-color > /dev/null 2>&1; then
+          echo "terraform_exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "terraform_exists=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Terraform Refresh
+      if: steps.check_state.outputs.terraform_exists == 'true'
+      working-directory: ./terraform
+      run: terraform refresh
 
     - name: Terraform Apply (Initial)
+      if: steps.check_state.outputs.terraform_exists == 'true'
       working-directory: ./terraform
       run: terraform apply -auto-approve
 
@@ -73,5 +79,11 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
     - name: Terraform Apply (Final)
+      if: steps.check_state.outputs.terraform_exists == 'true'
       working-directory: ./terraform
       run: terraform apply -auto-approve
+
+    - name: Terraform Plan (If state doesn't exist)
+      if: steps.check_state.outputs.terraform_exists == 'false'
+      working-directory: ./terraform
+      run: terraform plan
