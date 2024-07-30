@@ -24,6 +24,11 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-northeast-2
+
+    - name: Login to Amazon ECR for image
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+    
     - name: Authenticate Docker to Amazon ECR
       run: |
         aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
