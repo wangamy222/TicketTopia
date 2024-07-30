@@ -2,6 +2,8 @@ name: Applying TicketTopia app using terraform
 
 on:
   push:
+    branches:
+     - main
     paths:
       - 'terraform/**'
       - 'tickettopia/**'
