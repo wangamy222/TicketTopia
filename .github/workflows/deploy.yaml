@@ -5,6 +5,7 @@ on:
     branches:
      - main
     paths:
+      - 'terraform/**'
       - 'tickettopia/**'
       - 'nginx/**'
       - '.github/**'
@@ -71,10 +72,22 @@ jobs:
       run: |
         TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition TicketTopia-task --query taskDefinition)
         NEW_TASK_DEFINITION=$(echo $TASK_DEFINITION | jq --arg DJANGO_IMAGE "${{ steps.login-ecr.outputs.registry }}/tickettopia-django-app:${{ github.sha }}" --arg NGINX_IMAGE "${{ steps.login-ecr.outputs.registry }}/tickettopia-nginx:${{ github.sha }}" '
-          .containerDefinitions[0].image = $NGINX_IMAGE |
-          .containerDefinitions[1].image = $DJANGO_IMAGE
+          .containerDefinitions |= map(
+            if .name == "nginx" then .image = $NGINX_IMAGE
+            elif .name == "django-app" then .image = $DJANGO_IMAGE
+            else . end
+          )
         ')
-        NEW_TASK_ARN=$(aws ecs register-task-definition --family TicketTopia-task --container-definitions "$NEW_TASK_DEFINITION" --cpu "1024" --memory "2048" --network-mode awsvpc --requires-compatibilities FARGATE --execution-role-arn "$(aws iam get-role --role-name TicketTopia_ecs_execution_role --query Role.Arn --output text)" --query taskDefinition.taskDefinitionArn --output text)
+        NEW_TASK_ARN=$(aws ecs register-task-definition \
+          --family TicketTopia-task \
+          --cpu "1024" \
+          --memory "2048" \
+          --network-mode awsvpc \
+          --requires-compatibilities FARGATE \
+          --execution-role-arn "$(aws iam get-role --role-name TicketTopia_ecs_execution_role --query Role.Arn --output text)" \
+          --container-definitions "$NEW_TASK_DEFINITION" \
+          --query taskDefinition.taskDefinitionArn \
+          --output text)
 
     - name: Update ECS service
       run: |
