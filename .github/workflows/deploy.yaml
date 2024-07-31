@@ -5,7 +5,6 @@ on:
     branches:
      - main
     paths:
-      - 'terraform/**'
       - 'tickettopia/**'
       - 'nginx/**'
       - '.github/**'
@@ -25,34 +24,15 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-northeast-2
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v2
-
-    - name: Terraform Init
-      working-directory: ./terraform
-      run: terraform init
-
-    - name: Terraform Refresh
-      working-directory: ./terraform
-      run: terraform refresh
-
-    - name: Terraform Apply (Initial)
-      working-directory: ./terraform
-      run: terraform apply -auto-approve
-
-    - name: Login to Amazon ECR for image
+    - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
-
-    - name: Authenticate Docker to Amazon ECR
-      run: |
-        aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
 
     - name: Build and push Nginx image to ECR
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: tickettopia-nginx
-        IMAGE_TAG: latest
+        IMAGE_TAG: ${{ github.sha }}
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./nginx
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -61,7 +41,7 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: tickettopia-django-app
-        IMAGE_TAG: latest
+        IMAGE_TAG: ${{ github.sha }}
         DB_NAME: ${{ secrets.DB_NAME }}
         DB_USER: ${{ secrets.DB_USER }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
@@ -87,6 +67,19 @@ jobs:
           -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./tickettopia
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-    - name: Terraform Apply (Final)
-      working-directory: ./terraform
-      run: terraform apply -auto-approve
+    - name: Update ECS task definition
+      run: |
+        TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition TicketTopia-task --query taskDefinition)
+        NEW_TASK_DEFINITION=$(echo $TASK_DEFINITION | jq --arg DJANGO_IMAGE "${{ steps.login-ecr.outputs.registry }}/tickettopia-django-app:${{ github.sha }}" --arg NGINX_IMAGE "${{ steps.login-ecr.outputs.registry }}/tickettopia-nginx:${{ github.sha }}" '
+          .containerDefinitions[0].image = $NGINX_IMAGE |
+          .containerDefinitions[1].image = $DJANGO_IMAGE
+        ')
+        NEW_TASK_ARN=$(aws ecs register-task-definition --family TicketTopia-task --container-definitions "$NEW_TASK_DEFINITION" --cpu "1024" --memory "2048" --network-mode awsvpc --requires-compatibilities FARGATE --execution-role-arn "$(aws iam get-role --role-name TicketTopia_ecs_execution_role --query Role.Arn --output text)" --query taskDefinition.taskDefinitionArn --output text)
+
+    - name: Update ECS service
+      run: |
+        aws ecs update-service \
+          --cluster TicketTopia-cluster \
+          --service TicketTopia-service \
+          --task-definition $NEW_TASK_ARN \
+          --force-new-deployment
