@@ -43,8 +43,8 @@
     if (timeRemaining <= 0) {
       if (!hasRefreshed) {
         // Refresh the page once when the target time is reached
-        window.location.reload();
         hasRefreshed = true;
+        window.location.reload();
         return;
       }
 
@@ -52,6 +52,8 @@
         reservationLink.classList.remove('disabled-link');
         reservationLink.addEventListener('click', joinQueue);
       }
+      // Stop checking time after enabling the link
+      return;
     } else if (timeRemaining <= 60000) { // If less than a minute remains
       // Check every second in the last minute
       setTimeout(checkTime, 1000);
@@ -82,6 +84,17 @@
 
   // Start checking time immediately
   checkTime();
+
+  // Check if we've passed the target time on page load
+  const now = new Date();
+  const seoulTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Seoul"}));
+  if (seoulTime >= targetTime) {
+    const reservationLink = document.getElementById('reservation-link');
+    if (reservationLink) {
+      reservationLink.classList.remove('disabled-link');
+      reservationLink.addEventListener('click', joinQueue);
+    }
+  }
 </script>
 
 <style>
