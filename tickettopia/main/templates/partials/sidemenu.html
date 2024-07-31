@@ -19,7 +19,9 @@
       <li><a href="{% url 'concertinfo' %}">공연정보</a></li>
       {% if user.is_authenticated %}
         {% if not has_reservation %}
-          <li id="join-queue-btn" style="opacity: 0;><a href="{% url 'waiting_room' %}">예매하기</a></li>
+          <li id="join-queue-btn">
+            <a href="{% url 'waiting_room' %}" id="reservation-link" class="disabled-link">예매하기</a>
+          </li>
         {% endif %}
         <li><a href="{% url 'reservationlog' %}">예매내역</a></li>
       {% endif %}
@@ -32,12 +34,32 @@
   function checkTime() {
     const now = new Date();
     const seoulTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Seoul"}));
-    const targetTime = new Date('2024-07-31T11:33:00+09:00'); // Seoul time (KST)
-    const joinQueueBtn = document.getElementById('join-queue-btn');
+    const targetTime = new Date('2024-07-31T11:45:00+09:00'); // Seoul time (KST)
+    const reservationLink = document.getElementById('reservation-link');
 
-    if (seoulTime >= targetTime && joinQueueBtn) {
-      joinQueueBtn.style.opacity = '1';
+    if (seoulTime >= targetTime && reservationLink) {
+      reservationLink.classList.remove('disabled-link');
+      reservationLink.addEventListener('click', joinQueue);
     }
+  }
+
+  function joinQueue(e) {
+    e.preventDefault();
+    fetch('{% url "join_queue" %}', {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        window.location.href = '{% url "waiting_room" %}';
+      } else {
+        alert('대기열 입장에 실패했습니다: ' + data.error);
+      }
+    });
   }
 
   // Check time immediately
@@ -45,24 +67,19 @@
 
   // Check time every minute
   setInterval(checkTime, 60000);
+</script>
 
-
-  document.getElementById('join-queue-btn').addEventListener('click', function(e) {
-      e.preventDefault();
-      fetch('{% url "join_queue" %}', {
-          method: 'POST',
-          headers: {
-              'X-CSRFToken': '{{ csrf_token }}',
-              'Content-Type': 'application/json',
-          },
-      })
-      .then(response => response.json())
-      .then(data => {
-          if (data.success) {
-              window.location.href = '{% url "waiting_room" %}';
-          } else {
-              alert('대기열 입장에 실패했습니다: ' + data.error);
-          }
-      });
-  });
-  </script>
+<style>
+  .disabled-link {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+    color: #ffffffd7;
+    font-family: "Pretendard-Regular";
+    font-size: 30px;
+  }
+  .disabled-link:hover {
+    color: #d36d78;
+    transition: 0.3s;
+  }
+</style>
