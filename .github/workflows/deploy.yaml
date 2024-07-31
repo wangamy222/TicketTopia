@@ -68,31 +68,10 @@ jobs:
           -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./tickettopia
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-    - name: Update ECS task definition
-      run: |
-        TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition TicketTopia-task --query taskDefinition)
-        NEW_TASK_DEFINITION=$(echo $TASK_DEFINITION | jq --arg DJANGO_IMAGE "${{ steps.login-ecr.outputs.registry }}/tickettopia-django-app:${{ github.sha }}" --arg NGINX_IMAGE "${{ steps.login-ecr.outputs.registry }}/tickettopia-nginx:${{ github.sha }}" '
-          .containerDefinitions |= map(
-            if .name == "nginx" then .image = $NGINX_IMAGE
-            elif .name == "django-app" then .image = $DJANGO_IMAGE
-            else . end
-          )
-        ')
-        NEW_TASK_ARN=$(aws ecs register-task-definition \
-          --family TicketTopia-task \
-          --cpu "1024" \
-          --memory "2048" \
-          --network-mode awsvpc \
-          --requires-compatibilities FARGATE \
-          --execution-role-arn "$(aws iam get-role --role-name TicketTopia_ecs_execution_role --query Role.Arn --output text)" \
-          --container-definitions "$NEW_TASK_DEFINITION" \
-          --query taskDefinition.taskDefinitionArn \
-          --output text)
 
     - name: Update ECS service
       run: |
         aws ecs update-service \
           --cluster TicketTopia-cluster \
           --service TicketTopia-service \
-          --task-definition $NEW_TASK_ARN \
           --force-new-deployment
