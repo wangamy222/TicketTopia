@@ -29,6 +29,24 @@
 </div>
 
 <script>
+  function checkTime() {
+    const now = new Date();
+    const seoulTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Seoul"}));
+    const targetTime = new Date('2024-07-31T11:12:00+09:00'); // Seoul time (KST)
+    const joinQueueBtn = document.getElementById('join-queue-btn');
+
+    if (seoulTime >= targetTime && joinQueueBtn) {
+      joinQueueBtn.style.display = 'block';
+    }
+  }
+
+  // Check time immediately
+  checkTime();
+
+  // Check time every minute
+  setInterval(checkTime, 60000);
+
+
   document.getElementById('join-queue-btn').addEventListener('click', function(e) {
       e.preventDefault();
       fetch('{% url "join_queue" %}', {
