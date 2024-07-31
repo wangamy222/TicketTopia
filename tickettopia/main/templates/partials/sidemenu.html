@@ -32,7 +32,7 @@
   function checkTime() {
     const now = new Date();
     const seoulTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Seoul"}));
-    const targetTime = new Date('2024-07-31T11:12:00+09:00'); // Seoul time (KST)
+    const targetTime = new Date('2024-07-31T11:15:00+09:00'); // Seoul time (KST)
     const joinQueueBtn = document.getElementById('join-queue-btn');
 
     if (seoulTime >= targetTime && joinQueueBtn) {
