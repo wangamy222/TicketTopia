@@ -68,7 +68,7 @@ resource "aws_ecs_service" "TicketTopia_service" {
   name                   = "TicketTopia-service"
   cluster                = aws_ecs_cluster.TicketTopia_cluster.id
   task_definition        = aws_ecs_task_definition.TicketTopia_task.arn
-  desired_count          = 1
+  desired_count          = 2
   launch_type            = "FARGATE"
   force_new_deployment   = true
 

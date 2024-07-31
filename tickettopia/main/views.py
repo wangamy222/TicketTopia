@@ -10,6 +10,7 @@ from .models import User, Payment
 from .queue_manager import SQSManager
 from django.contrib.auth.decorators import login_required
 
+
 sqs_manager = SQSManager()
 
 
