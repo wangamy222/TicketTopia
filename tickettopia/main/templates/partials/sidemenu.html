@@ -31,8 +31,7 @@
 </div>
 
 <script>
-  const targetTime = new Date('2024-07-31T11:58:00+09:00'); // Seoul time (KST)
-  let hasRefreshed = false;
+  const targetTime = new Date('2024-07-31T11:53:00+09:00'); // Seoul time (KST)
 
   function checkTime() {
     const now = new Date();
@@ -41,16 +40,15 @@
     const timeRemaining = targetTime - seoulTime;
 
     if (timeRemaining <= 0) {
-      if (!hasRefreshed) {
-        // Refresh the page once when the target time is reached
-        hasRefreshed = true;
+      if (!localStorage.getItem('hasRefreshed')) {
+        // Set the flag and refresh the page once when the target time is reached
+        localStorage.setItem('hasRefreshed', 'true');
         window.location.reload();
         return;
       }
 
       if (reservationLink) {
-        reservationLink.classList.remove('disabled-link');
-        reservationLink.addEventListener('click', joinQueue);
+        enableReservationLink(reservationLink);
       }
       // Stop checking time after enabling the link
       return;
@@ -61,6 +59,11 @@
       // Check every minute otherwise
       setTimeout(checkTime, 60000);
     }
+  }
+
+  function enableReservationLink(link) {
+    link.classList.remove('disabled-link');
+    link.addEventListener('click', joinQueue);
   }
 
   function joinQueue(e) {
@@ -82,18 +85,18 @@
     });
   }
 
-  // Start checking time immediately
-  checkTime();
-
   // Check if we've passed the target time on page load
   const now = new Date();
   const seoulTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Seoul"}));
+  const reservationLink = document.getElementById('reservation-link');
+
   if (seoulTime >= targetTime) {
-    const reservationLink = document.getElementById('reservation-link');
     if (reservationLink) {
-      reservationLink.classList.remove('disabled-link');
-      reservationLink.addEventListener('click', joinQueue);
+      enableReservationLink(reservationLink);
     }
+  } else {
+    // Only start checking time if we haven't passed the target time
+    checkTime();
   }
 </script>
 
