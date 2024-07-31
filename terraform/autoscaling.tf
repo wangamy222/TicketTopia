@@ -37,7 +37,7 @@ resource "aws_appautoscaling_policy" "TicketTopia_scale_up" {
 }
 
 # 오토스케일링 정책 (스케일 다운)
-resource "aws_appautoscaling_policy" "scale_down" {
+resource "aws_appautoscaling_policy" "TicketTopia_scale_down" {
   name               = "TicketTopia_scale_down"
   policy_type        = "StepScaling"
   resource_id        = aws_appautoscaling_target.TicketTopia_ecs_target.resource_id

@@ -18,10 +18,10 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
   period              = 30
   statistic           = "Average"
   threshold           = 60
-  alarm_actions       = [aws_appautoscaling_policy.scale_up.arn]
+  alarm_actions       = [aws_appautoscaling_policy.TicketTopia_scale_up.arn]
   dimensions = {
-    ClusterName = aws_ecs_cluster.main.name
-    ServiceName = aws_ecs_service.app.name
+    ClusterName = aws_ecs_cluster.TicketTopia_cluster.name
+    ServiceName = aws_ecs_service.TicketTopia_service.name
   }
 }
 
@@ -34,7 +34,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_low" {
   period              = 30
   statistic           = "Average"
   threshold           = 50
-  alarm_actions       = [aws_appautoscaling_policy.scale_down.arn]
+  alarm_actions       = [aws_appautoscaling_policy.TicketTopia_scale_down.arn]
   dimensions = {
     ClusterName = aws_ecs_cluster.TicketTopia_cluster.name
     ServiceName = aws_ecs_service.TicketTopia_service.name
