@@ -31,15 +31,33 @@
 </div>
 
 <script>
+  const targetTime = new Date('2024-07-31T11:53:00+09:00'); // Seoul time (KST)
+  let hasRefreshed = false;
+
   function checkTime() {
     const now = new Date();
     const seoulTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Seoul"}));
-    const targetTime = new Date('2024-07-31T11:45:00+09:00'); // Seoul time (KST)
     const reservationLink = document.getElementById('reservation-link');
+    const timeRemaining = targetTime - seoulTime;
 
-    if (seoulTime >= targetTime && reservationLink) {
-      reservationLink.classList.remove('disabled-link');
-      reservationLink.addEventListener('click', joinQueue);
+    if (timeRemaining <= 0) {
+      if (!hasRefreshed) {
+        // Refresh the page once when the target time is reached
+        window.location.reload();
+        hasRefreshed = true;
+        return;
+      }
+
+      if (reservationLink) {
+        reservationLink.classList.remove('disabled-link');
+        reservationLink.addEventListener('click', joinQueue);
+      }
+    } else if (timeRemaining <= 60000) { // If less than a minute remains
+      // Check every second in the last minute
+      setTimeout(checkTime, 1000);
+    } else {
+      // Check every minute otherwise
+      setTimeout(checkTime, 60000);
     }
   }
 
@@ -62,11 +80,8 @@
     });
   }
 
-  // Check time immediately
+  // Start checking time immediately
   checkTime();
-
-  // Check time every minute
-  setInterval(checkTime, 60000);
 </script>
 
 <style>
