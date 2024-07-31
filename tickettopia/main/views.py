@@ -117,7 +117,7 @@ def create_payment(request):
 
             payment = Payment.objects.create(
                 pid=f"ET-{seq}",
-                tid=f"TS-08092024-{seq}",
+                tid=f"TS-08082024-{seq}",
                 uid=request.user.uid if request.user.is_authenticated else 'anonymous',
                 uname=request.user.name if request.user.is_authenticated else 'Anonymous',
                 state='1'
