@@ -19,7 +19,7 @@
       <li><a href="{% url 'concertinfo' %}">공연정보</a></li>
       {% if user.is_authenticated %}
         {% if not has_reservation %}
-          <li id="join-queue-btn"><a href="{% url 'waiting_room' %}">예매하기</a></li>
+          <li id="join-queue-btn" style="display: none;><a href="{% url 'waiting_room' %}">예매하기</a></li>
         {% endif %}
         <li><a href="{% url 'reservationlog' %}">예매내역</a></li>
       {% endif %}
@@ -32,7 +32,7 @@
   function checkTime() {
     const now = new Date();
     const seoulTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Seoul"}));
-    const targetTime = new Date('2024-07-31T11:21:00+09:00'); // Seoul time (KST)
+    const targetTime = new Date('2024-07-31T11:26:00+09:00'); // Seoul time (KST)
     const joinQueueBtn = document.getElementById('join-queue-btn');
 
     if (seoulTime >= targetTime && joinQueueBtn) {
