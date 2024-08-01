@@ -79,30 +79,6 @@ def user_has_reservation(user):
 def check_auth(request):
     return JsonResponse({'is_authenticated': request.user.is_authenticated})
 
-def reservationlog(request):
-    context = {}
-    if request.user.is_authenticated:
-        context['has_reservation'] = user_has_reservation(request.user)
-        try:
-            payments = Payment.objects.filter(uid=request.user.uid).order_by('-seq')
-            context['payment'] = payments.first() if payments.exists() else None
-        except Payment.DoesNotExist:
-            context['payment'] = None
-    context['user'] = request.user
-    return render(request, 'reservationlog.html', context)
-
-def reservationcheck(request):
-    context = {}
-    if request.user.is_authenticated:
-        context['has_reservation'] = user_has_reservation(request.user)
-        try:
-            payments = Payment.objects.filter(uid=request.user.uid).order_by('-seq')
-            context['payment'] = payments.first() if payments.exists() else None
-        except Payment.DoesNotExist:
-            context['payment'] = None
-    context['user'] = request.user
-    return render(request, 'reservationcheck.html', context)
-
 @csrf_exempt
 @require_POST
 def create_payment(request):
@@ -167,6 +143,31 @@ def create_payment(request):
         })
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
+
+def reservationlog(request):
+    context = {}
+    if request.user.is_authenticated:
+        context['has_reservation'] = user_has_reservation(request.user)
+        try:
+            payments = Payment.objects.filter(uid=request.user.uid).order_by('-seq')
+            context['payment'] = payments.first() if payments.exists() else None
+        except Payment.DoesNotExist:
+            context['payment'] = None
+    context['user'] = request.user
+    return render(request, 'reservationlog.html', context)
+
+def reservationcheck(request):
+    context = {}
+    if request.user.is_authenticated:
+        context['has_reservation'] = user_has_reservation(request.user)
+        try:
+            payments = Payment.objects.filter(uid=request.user.uid).order_by('-seq')
+            context['payment'] = payments.first() if payments.exists() else None
+        except Payment.DoesNotExist:
+            context['payment'] = None
+    context['user'] = request.user
+    return render(request, 'reservationcheck.html', context)
+
         
 
 @login_required
