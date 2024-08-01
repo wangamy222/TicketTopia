@@ -101,41 +101,6 @@ def create_payment(request):
                 state='1'
             )
 
-            # Send confirmation email
-            if request.user.is_authenticated:
-                subject = "TicketTopia 예매 확정"
-                body = f"""
-                <html>
-                <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto;">
-                    <img src="https://pbs.twimg.com/media/FpUpZiNXgAIbmol?format=jpg&name=large" alt="Taylor Banner" style="width: 100%; max-width: 600px; height: auto; margin-bottom: 20px;">
-                    
-                    <p>{request.user.name}님,</p>
-                    <p><strong style="color: #d36d78;">Taylor Swift: The Eras Tour 2024</strong> 예약이 완료 되었습니다.</p>
-                    
-                    <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
-                        <p style="margin: 5px 0;"><strong style="color: #d36d78;">이름:</strong> {payment.uname}</p>
-                        <p style="margin: 5px 0;"><strong style="color: #d36d78;">티켓번호:</strong> {payment.tid}</p>
-                        <p style="margin: 5px 0;"><strong style="color: #d36d78;">좌석:</strong> {payment.pid}</p>
-                        <p style="margin: 5px 0;"><strong style="color: #d36d78;">날짜:</strong> 2024/09/30 19:00</p>
-                    </div>
-                    
-                    <p>예매해 주셔서 감사합니다.</p>
-                    <br>
-                    <p>유의사항<p>
-                    <strong style="color: #d36d78;">* 예매자 본인만 티켓 수령 가능합니다 </strong>
-                    <br>
-                    <strong style="color: #d36d78;">* 취소/환불/양도 불가합니다 </strong>
-                    <br>
-                    <br>
-                    <p>
-                    Best regards,<br>
-                    TicketTopia
-                    </p>
-                </body>
-                </html>
-                """
-                send_email(request.user.uid, subject, body, is_html=True)
-
         return JsonResponse({
             'success': True,
             'pid': payment.pid,
