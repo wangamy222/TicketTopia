@@ -9,8 +9,8 @@ resource "aws_cloudwatch_log_group" "TicketTopia_django_logs" {
 }
 
 # CloudWatch 경보 설정
-resource "aws_cloudwatch_metric_alarm" "cpu_high" {
-  alarm_name          = "cpu_high"
+resource "aws_cloudwatch_metric_alarm" "TicketTopia_cpu_high" {
+  alarm_name          = "TicketTopia_cpu_high"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 3
   metric_name         = "CPUUtilization"
@@ -26,7 +26,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cpu_low" {
-  alarm_name          = "cpu_low"
+  alarm_name          = "TicketTopia_cpu_low"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "CPUUtilization"
