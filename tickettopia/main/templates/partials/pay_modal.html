@@ -124,6 +124,7 @@
           if (data.success) {
               alert("결제가 완료되었습니다");
               // Optionally redirect or perform other actions
+              window.location.href = payButton.dataset.reservationcheckUrl;
           } else {
               alert(data.error || '결제 중 오류가 발생했습니다.');
           }
