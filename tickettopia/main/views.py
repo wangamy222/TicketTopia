@@ -9,6 +9,7 @@ from django.db import transaction
 from .models import User, Payment
 from .queue_manager import SQSManager
 from django.contrib.auth.decorators import login_required
+from .ses_utils import send_email
 
 
 sqs_manager = SQSManager()
@@ -123,6 +124,25 @@ def create_payment(request):
                 uname=request.user.name if request.user.is_authenticated else 'Anonymous',
                 state='1'
             )
+
+            # Send confirmation email
+            if request.user.is_authenticated:
+                subject = "Reservation Confirmation"
+                body = f"""
+                {request.user.name}님,
+
+                Taylor Swift:The eras tour 2024 예약이 완료 되었습니다.
+                이름: {payment.uname}
+                티켓번호: {payment.tid}
+                좌석: {payment.pid}
+                날짜: 2024/09/30 19:00
+
+                예매해 주셔서 감사합니다.
+
+                Best regards,
+                Your Concert Team
+                """
+                send_email(request.user.uid, subject, body)
 
         return JsonResponse({
             'success': True,
