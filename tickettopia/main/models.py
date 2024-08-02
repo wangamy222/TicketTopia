@@ -7,6 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.utils import timezone
 
 
 class CustomUserManager(BaseUserManager):
@@ -29,6 +30,7 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(uid, password, **extra_fields)
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(null=True, blank=True)
     seq = models.AutoField(primary_key=True)
@@ -38,6 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     birthday = models.DateField()
     phonenumber = models.CharField(max_length=15)
     state = models.CharField(max_length=50, blank=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -57,13 +60,13 @@ class Payment(models.Model):
     pid = models.CharField(unique=True, max_length=50)
     tid = models.CharField(max_length=50)
     uid = models.CharField(max_length=50)
-    uname = models.CharField(max_length=50, default='') 
+    uname = models.CharField(max_length=50, default='')
     state = models.CharField(max_length=50)
+    created_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
         managed = False
         db_table = 'Payment'
-
 
 
 class Reservation(models.Model):
@@ -89,7 +92,6 @@ class Ticket(models.Model):
     class Meta:
         managed = False
         db_table = 'Ticket'
-
 
 
 class AuthGroup(models.Model):

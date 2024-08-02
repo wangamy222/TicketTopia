@@ -25,7 +25,7 @@ resource "aws_cloudwatch_metric_alarm" "TicketTopia_cpu_high" {
   }
 }
 
-resource "aws_cloudwatch_metric_alarm" "cpu_low" {
+resource "aws_cloudwatch_metric_alarm" "TicketTopia_cpu_low" {
   alarm_name          = "TicketTopia_cpu_low"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = 2
@@ -39,4 +39,28 @@ resource "aws_cloudwatch_metric_alarm" "cpu_low" {
     ClusterName = aws_ecs_cluster.TicketTopia_cluster.name
     ServiceName = aws_ecs_service.TicketTopia_service.name
   }
+}
+
+# CloudWatch 메트릭 경보 생성 (CPU 사용률)
+resource "aws_cloudwatch_metric_alarm" "TicketTopia_ecs_cpu_alarm" {
+  alarm_name          = "TicketTopia_ecs-cpu-alarm"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/ECS"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = "80"
+  alarm_description   = "This metric monitors ECS CPU utilization"
+  alarm_actions       = [aws_sns_topic.alerts.arn]
+
+  dimensions = {
+    ClusterName = aws_ecs_cluster.TicketTopia_cluster.name
+    ServiceName = aws_ecs_service.TicketTopia_service.name
+  }
+}
+
+# SNS 토픽 생성 (알림용)
+resource "aws_sns_topic" "alerts" {
+  name = "ecs-alerts"
 }

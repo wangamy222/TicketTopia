@@ -1,0 +1,113 @@
+{% extends "base.html" %} 
+
+
+{% load static %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/status.css' %}" />
+{% endblock %} 
+
+{% block content %}
+<main id="main_wrapper">
+  <div id="container">
+    <div id="count">
+      <div id="right_now">
+        <h1>동시 접속자 수</h1>
+        <p id="active-users-count">
+          <span>현재 동시 접속자 수:</span> {{ status_count }}명
+        </p>
+      </div>
+      <div id="count_ticket">
+        <h2>예매 수</h2>
+        <p id="reservation-count">
+          <span>현재 예매 수:</span> {{ reservation_count }}매
+        </p>
+        <div id="chart-container">
+          <canvas id="reservationChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div id="reservation_list">
+      <h2>예매 목록</h2>
+      <div id="table_wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>예매 번호</th>
+              <th>사용자 ID</th>
+              <th>사용자 이름</th>
+              <th>예매 시간</th>
+            </tr>
+          </thead>
+          <tbody id="reservation-list">
+            {% for reservation in recent_reservations %}
+            <tr>
+              <td>{{ reservation.pid }}</td>
+              <td>{{ reservation.uid }}</td>
+              <td>{{ reservation.uname }}</td>
+              <td>{{ reservation.created_at|date:"Y-m-d H:i:s" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Chart 초기화
+  var ctx = document.getElementById('reservationChart').getContext('2d');
+  var chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: {{ chart_labels|safe }},
+      datasets: [{
+        label: '시간별 예매 수',
+        data: {{ chart_data|safe }},
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+      }]
+    },
+    options: {
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+  });
+
+  function updateCounts() {
+    fetch("/active-users/")
+      .then((response) => response.text())
+      .then((html) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+
+        // Update active users count
+        const activeUsersCount = doc.querySelector("#active-users-count .count-value").textContent;
+        document.querySelector("#active-users-count .count-value").textContent = activeUsersCount;
+
+        // Update reservation count
+        const reservationCount = doc.querySelector("#reservation-count .count-value").textContent;
+        document.querySelector("#reservation-count .count-value").textContent = reservationCount;
+
+        // 차트 데이터 업데이트
+        const newLabels = JSON.parse(doc.getElementById('chart-labels').textContent);
+        const newData = JSON.parse(doc.getElementById('chart-data').textContent);
+        chart.data.labels = newLabels;
+        chart.data.datasets[0].data = newData;
+        chart.update();
+
+        // 예매 목록 업데이트
+        const newReservationList = doc.getElementById("reservation-list").innerHTML;
+        document.getElementById("reservation-list").innerHTML = newReservationList;
+      });
+  }
+
+  setInterval(updateCounts, 30000); // 30초마다 업데이트
+</script>
+{% endblock %}

@@ -1,5 +1,9 @@
 resource "aws_ecs_cluster" "TicketTopia_cluster" {
   name = "TicketTopia-cluster"
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
 }
 
 resource "aws_ecr_repository" "tickettopia_django_app" {

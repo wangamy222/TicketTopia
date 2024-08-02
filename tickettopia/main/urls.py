@@ -18,4 +18,5 @@ urlpatterns = [
     path('check-queue-status/', views.check_queue_status,
          name='check_queue_status'),
     path('waiting-room/', views.waiting_room, name='waiting_room'),
+    path('status/', views.status, name='status'),
 ]
