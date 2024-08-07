@@ -213,7 +213,7 @@ def join(request):
            
            
             # Get current time in KST
-            current_time = timezone.timedelta()
+            current_time = datetime.now()
             
             User.objects.create_user(
                 uid=uid,
