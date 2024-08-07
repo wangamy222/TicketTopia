@@ -138,7 +138,7 @@ def create_payment(request):
                 })
             
             # Get current time in KST
-            current_time = datetime.utcnow()
+            current_time = datetime.now()
 
             payment = Payment.objects.create(
                 pid=f"ET-{seq}",
@@ -193,7 +193,7 @@ def join(request):
         context['has_reservation'] = user_has_reservation(request.user)
         
             # Get current time in KST
-    current_time = datetime.utcnow() 
+    current_time = datetime.now()
 
     if request.method == 'POST':
         uid = request.POST.get('uid')
@@ -281,7 +281,7 @@ def status(request):
     
     
     # 현재 시간을 한국 시간으로 설정 (UTC+9)
-    now = datetime.utcnow()
+    now = datetime.now()
     time_threshold = now - timedelta(hours=24)
     
     hourly_data = Payment.objects.filter(created_at__gte=time_threshold)\
